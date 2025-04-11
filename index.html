@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MY FAVORITE MUSIC</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #8e44ad;
+        --secondary-color: #9b59b6;
+        --dark-color: #2c3e50;
+        --light-color: #ecf0f1;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background-color: #121212;
+        color: #fff;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        overflow-x: hidden;
+        width: 100%;
+      }
+
+      .container {
+        max-width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+        width: 100%;
+      }
+
+      .music-container {
+        background-color: #1e1e1e;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        padding: 25px;
+        margin: 30px auto;
+        width: calc(100% - 30px);
+        max-width: 900px;
+        box-sizing: border-box;
+      }
+
+      .row {
+        margin-right: -15px;
+        margin-left: -15px;
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .col-lg-5,
+      .col-lg-7 {
+        padding-right: 15px;
+        padding-left: 15px;
+      }
+
+      .album-cover {
+        width: 100%;
+        max-width: 300px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+      }
+
+      .album-cover.playing {
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.03);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+        gap: 15px;
+      }
+
+      .controls button {
+        background: transparent;
+        border: none;
+        color: #fff;
+        font-size: 22px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+      }
+
+      .controls button:hover {
+        background-color: rgba(142, 68, 173, 0.2);
+        transform: scale(1.1);
+      }
+
+      .controls .play-btn {
+        font-size: 28px;
+        background-color: var(--primary-color);
+        width: 60px;
+        height: 60px;
+      }
+
+      .controls .play-btn:hover {
+        background-color: var(--secondary-color);
+        color: #fff;
+      }
+
+      .progress-container {
+        background: #3a3a3a;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 15px 0 5px;
+        height: 6px;
+        width: 100%;
+      }
+
+      .progress {
+        background-color: var(--primary-color);
+        border-radius: 5px;
+        height: 100%;
+        width: 0%;
+        transition: width 0.1s linear;
+        position: relative;
+      }
+
+      .progress::after {
+        content: "";
+        position: absolute;
+        right: -5px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 10px;
+        height: 10px;
+        background-color: var(--primary-color);
+        border-radius: 50%;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+
+      .progress-container:hover .progress::after {
+        opacity: 1;
+      }
+
+      .song-list {
+        margin-top: 30px;
+        max-height: 400px;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+        padding-right: 5px; /* Memberi ruang untuk scrollbar */
+      }
+
+      .song-list-container {
+        position: relative;
+      }
+
+      .song-item {
+        padding: 12px 15px;
+        background-color: #2a2a2a;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .song-item:hover {
+        background-color: #333;
+        transform: translateX(3px);
+      }
+
+      .song-item.active {
+        background-color: var(--primary-color);
+      }
+
+      .song-item.active .artist {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .song-info {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+      }
+
+      .song-info .title {
+        font-weight: bold;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .song-info .artist {
+        font-size: 0.9rem;
+        color: #bbb;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .time-info {
+        display: flex;
+        justify-content: space-between;
+        color: #bbb;
+        font-size: 0.8rem;
+        margin-bottom: 5px;
+      }
+
+      .visualization {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        height: 60px;
+        margin: 20px 0;
+        gap: 4px;
+      }
+
+      .bar {
+        background-color: var(--primary-color);
+        width: 6px;
+        border-radius: 3px;
+        animation: none;
+        height: 5px;
+        transition: height 0.3s ease;
+      }
+
+      .playing .bar {
+        animation: sound 0ms -800ms linear infinite alternate;
+      }
+
+      @keyframes sound {
+        0% {
+          height: 5px;
+        }
+        100% {
+          height: 100%;
+        }
+      }
+
+      .playing .bar:nth-child(1) {
+        animation-duration: 474ms;
+      }
+
+      .playing .bar:nth-child(2) {
+        animation-duration: 433ms;
+      }
+
+      .playing .bar:nth-child(3) {
+        animation-duration: 407ms;
+      }
+
+      .playing .bar:nth-child(4) {
+        animation-duration: 458ms;
+      }
+
+      .playing .bar:nth-child(5) {
+        animation-duration: 400ms;
+      }
+
+      .playing .bar:nth-child(6) {
+        animation-duration: 427ms;
+      }
+
+      .playing .bar:nth-child(7) {
+        animation-duration: 441ms;
+      }
+
+      .playing .bar:nth-child(8) {
+        animation-duration: 419ms;
+      }
+
+      .playing .bar:nth-child(9) {
+        animation-duration: 487ms;
+      }
+
+      .playing .bar:nth-child(10) {
+        animation-duration: 442ms;
+      }
+
+      /* Scrollbar styling */
+      .song-list::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .song-list::-webkit-scrollbar-track {
+        background: #2a2a2a;
+        border-radius: 10px;
+      }
+
+      .song-list::-webkit-scrollbar-thumb {
+        background: var(--primary-color);
+        border-radius: 10px;
+      }
+
+      .song-list::-webkit-scrollbar-thumb:hover {
+        background: var(--secondary-color);
+      }
+
+      /* Volume control */
+      .volume-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 15px;
+      }
+
+      .volume-slider {
+        width: 100px;
+        cursor: pointer;
+        accent-color: var(--primary-color);
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        body {
+          padding: 15px;
+        }
+
+        .music-container {
+          margin: 0;
+          padding: 15px;
+          width: 100%;
+        }
+
+        .row {
+          flex-direction: column;
+          margin: 0;
+        }
+
+        .col-lg-5,
+        .col-lg-7 {
+          width: 100%;
+          padding: 0;
+        }
+
+        .controls button {
+          margin: 0 5px;
+        }
+
+        .controls .play-btn {
+          font-size: 24px;
+          width: 50px;
+          height: 50px;
+        }
+      }
+
+      /* Loading state */
+      .loading {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .loading::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
+        animation: loading 1.5s infinite;
+      }
+
+      @keyframes loading {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      /* Error message */
+      .error-message {
+        color: #ff6b6b;
+        text-align: center;
+        margin-top: 10px;
+        font-size: 0.9rem;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="music-container">
+        <h1 class="text-center mb-4">MY FAVORITE MUSIC</h1>
+        <div class="row">
+          <div class="col-lg-5">
+            <div class="d-flex justify-content-center">
+              <img
+                id="album-cover"
+                src="https://via.placeholder.com/400x400?text=Album+Cover"
+                alt="Album Cover"
+                class="album-cover"
+              />
+            </div>
+
+            <div class="visualization" id="visualization">
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+            </div>
+
+            <div class="song-details text-center">
+              <h3 id="title">Pilih Lagu</h3>
+              <p id="artist">-</p>
+            </div>
+
+            <div class="time-info">
+              <span id="current-time">0:00</span>
+              <span id="duration">0:00</span>
+            </div>
+            <div class="progress-container" id="progress-container">
+              <div class="progress" id="progress"></div>
+            </div>
+
+            <div class="controls">
+              <button id="shuffle" class="action-btn" title="Acak">
+                <i class="fas fa-random"></i>
+              </button>
+              <button id="prev" class="action-btn" title="Sebelumnya">
+                <i class="fas fa-step-backward"></i>
+              </button>
+              <button id="play" class="play-btn" title="Putar">
+                <i class="fas fa-play"></i>
+              </button>
+              <button id="next" class="action-btn" title="Berikutnya">
+                <i class="fas fa-step-forward"></i>
+              </button>
+              <button id="repeat" class="action-btn" title="Ulangi">
+                <i class="fas fa-redo"></i>
+              </button>
+            </div>
+
+            <div class="volume-container">
+              <i class="fas fa-volume-down"></i>
+              <input
+                type="range"
+                id="volume"
+                class="volume-slider"
+                min="0"
+                max="1"
+                step="0.01"
+                value="0.7"
+              />
+              <i class="fas fa-volume-up"></i>
+            </div>
+
+            <div id="error-message" class="error-message"></div>
+          </div>
+
+          <div class="col-lg-7">
+            <div class="song-list-container">
+              <div class="song-list" id="song-list">
+                <!-- Songs will be populated by JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Data lagu dengan path audio yang sebenarnya
+      const songs = [
+        {
+          title: "Bury the Light",
+          artist: "DMC",
+          cover: "Bury the Light.jpg",
+          audioPath: "Bury the Light.mp3",
+          duration: "4:25",
+        },
+        {
+          title: "Killer Queen",
+          artist: "Queen",
+          cover: "KILLER QUEEN.jpg",
+          audioPath: "Killer Queen Normal.mp3",
+          duration: "4:25",
+        },
+        {
+          title: "Killer Queen - Speed Up",
+          artist: "Dewa 19",
+          cover: "KILLER QUEEN.JPG",
+          audioPath: "Killer Queen Speed Up.mp3",
+          duration: "3:00",
+        },
+        {
+          title: "Killer Queen - Slowed",
+          artist: "Noah",
+          cover: "KILLER QUEEN.JPg",
+          audioPath: "Killer Queen Slowed.mp3",
+          duration: "3:39",
+        },
+        {
+          title: "The Wonder Of You",
+          artist: "Nidji",
+          cover: "THE WONDER OF YOU.jpg",
+          audioPath: "THE WONDER OF YOU NORMAL.mp3",
+          duration: "2:29",
+        },
+        {
+          title: "The Wonder Of You - SLowed Reverb",
+          artist: "Andmesh Kamaleng",
+          cover: "THE WONDER OF YOU.jpg",
+          audioPath: "THE WONDER OF YOU SLOWED REVERB.mp3",
+          duration: "3:12",
+        },
+        {
+          title: "Kau Adalah",
+          artist: "Isyana Sarasvati",
+          cover:
+            "https://i1.sndcdn.com/artworks-000142517332-4x7h0v-t500x500.jpg",
+          audioPath:
+            "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
+          duration: "4:05",
+        },
+      ];
+
+      // Mengambil elemen DOM
+      const playBtn = document.getElementById("play");
+      const prevBtn = document.getElementById("prev");
+      const nextBtn = document.getElementById("next");
+      const shuffleBtn = document.getElementById("shuffle");
+      const repeatBtn = document.getElementById("repeat");
+      const songTitle = document.getElementById("title");
+      const artistName = document.getElementById("artist");
+      const albumCover = document.getElementById("album-cover");
+      const songList = document.getElementById("song-list");
+      const progressContainer = document.getElementById("progress-container");
+      const progress = document.getElementById("progress");
+      const currentTimeEl = document.getElementById("current-time");
+      const durationEl = document.getElementById("duration");
+      const visualization = document.getElementById("visualization");
+      const volumeSlider = document.getElementById("volume");
+      const errorMessage = document.getElementById("error-message");
+
+      // Elemen audio
+      const audio = new Audio();
+
+      // Status musik
+      let isPlaying = false;
+      let currentSongIndex = 0;
+      let isShuffle = false;
+      let isRepeat = false;
+      let previousVolume = 0.7;
+      let isChangingSong = false;
+      let isScrolling = false;
+
+      // Mengisi daftar lagu
+      function populateSongList() {
+        songList.innerHTML = "";
+        songs.forEach((song, index) => {
+          const songItem = document.createElement("div");
+          songItem.classList.add("song-item");
+          if (index === currentSongIndex) {
+            songItem.classList.add("active");
+          }
+
+          songItem.innerHTML = `
+            <div class="song-info">
+              <div class="title">${song.title}</div>
+              <div class="artist">${song.artist}</div>
+            </div>
+            <div class="duration">${song.duration}</div>
+          `;
+
+          songItem.addEventListener("click", () => {
+            if (isChangingSong || isScrolling) return;
+            isChangingSong = true;
+
+            // Hapus kelas aktif dari semua item
+            document.querySelectorAll(".song-item").forEach((item) => {
+              item.classList.remove("active");
+            });
+
+            // Tambahkan kelas aktif ke item yang diklik
+            songItem.classList.add("active");
+
+            currentSongIndex = index;
+            loadSong(songs[currentSongIndex]);
+            playSong();
+            scrollToCurrentSong();
+
+            // Reset flag setelah animasi selesai
+            setTimeout(() => {
+              isChangingSong = false;
+            }, 300);
+          });
+
+          songList.appendChild(songItem);
+        });
+      }
+
+      // Format waktu dari detik ke menit:detik
+      function formatTime(seconds) {
+        if (isNaN(seconds)) return "0:00";
+
+        const minutes = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+      }
+
+      // Update progress bar
+      function updateProgress() {
+        const { duration, currentTime } = audio;
+        if (isNaN(duration)) return;
+
+        const progressPercent = (currentTime / duration) * 100;
+        progress.style.width = `${progressPercent}%`;
+
+        currentTimeEl.textContent = formatTime(currentTime);
+      }
+
+      // Set progress bar ketika diklik
+      function setProgress(e) {
+        const width = this.clientWidth;
+        const clickX = e.offsetX;
+        const duration = audio.duration;
+        audio.currentTime = (clickX / width) * duration;
+      }
+
+      // Muat lagu
+      function loadSong(song) {
+        showLoadingState(true);
+        hideError();
+
+        songTitle.textContent = song.title;
+        artistName.textContent = song.artist;
+        albumCover.src = song.cover;
+        audio.src = song.audioPath;
+
+        // Set durasi default dari metadata lagu
+        durationEl.textContent = song.duration;
+      }
+
+      // Putar lagu
+      function playSong() {
+        isPlaying = true;
+        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        playBtn.setAttribute("title", "Jeda");
+        albumCover.classList.add("playing");
+        visualization.classList.add("playing");
+
+        audio
+          .play()
+          .then(() => {
+            showLoadingState(false);
+          })
+          .catch((e) => {
+            console.error("Error playing audio:", e);
+            showError("Gagal memutar lagu. Pastikan file audio tersedia.");
+            pauseSong();
+          });
+      }
+
+      // Pause lagu
+      function pauseSong() {
+        isPlaying = false;
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+        playBtn.setAttribute("title", "Putar");
+        albumCover.classList.remove("playing");
+        visualization.classList.remove("playing");
+        showLoadingState(false);
+
+        audio.pause();
+      }
+
+      // Lagu selanjutnya
+      function nextSong() {
+        if (isChangingSong) return;
+        isChangingSong = true;
+
+        // Hapus kelas aktif dari semua item
+        document.querySelectorAll(".song-item").forEach((item) => {
+          item.classList.remove("active");
+        });
+
+        if (isShuffle) {
+          currentSongIndex = getRandomIndex();
+        } else {
+          currentSongIndex = (currentSongIndex + 1) % songs.length;
+        }
+
+        // Tambahkan kelas aktif ke item baru
+        const songItems = document.querySelectorAll(".song-item");
+        if (songItems[currentSongIndex]) {
+          songItems[currentSongIndex].classList.add("active");
+        }
+
+        loadSong(songs[currentSongIndex]);
+        scrollToCurrentSong();
+
+        if (isPlaying) {
+          playSong();
+        }
+
+        // Reset flag setelah animasi selesai
+        setTimeout(() => {
+          isChangingSong = false;
+        }, 300);
+      }
+
+      // Lagu sebelumnya
+      function prevSong() {
+        if (audio.currentTime > 3) {
+          // Jika lagu sudah berjalan lebih dari 3 detik, kembali ke awal lagu
+          audio.currentTime = 0;
+        } else {
+          // Jika tidak, pindah ke lagu sebelumnya
+          if (isChangingSong) return;
+          isChangingSong = true;
+
+          // Hapus kelas aktif dari semua item
+          document.querySelectorAll(".song-item").forEach((item) => {
+            item.classList.remove("active");
+          });
+
+          if (isShuffle) {
+            currentSongIndex = getRandomIndex();
+          } else {
+            currentSongIndex =
+              (currentSongIndex - 1 + songs.length) % songs.length;
+          }
+
+          // Tambahkan kelas aktif ke item baru
+          const songItems = document.querySelectorAll(".song-item");
+          if (songItems[currentSongIndex]) {
+            songItems[currentSongIndex].classList.add("active");
+          }
+
+          loadSong(songs[currentSongIndex]);
+          scrollToCurrentSong();
+
+          if (isPlaying) {
+            playSong();
+          }
+
+          // Reset flag setelah animasi selesai
+          setTimeout(() => {
+            isChangingSong = false;
+          }, 300);
+        }
+      }
+
+      // Dapatkan indeks acak untuk shuffle
+      function getRandomIndex() {
+        let newIndex;
+        do {
+          newIndex = Math.floor(Math.random() * songs.length);
+        } while (newIndex === currentSongIndex && songs.length > 1);
+        return newIndex;
+      }
+
+      // Scroll ke lagu yang sedang aktif
+      function scrollToCurrentSong() {
+        const songItems = document.querySelectorAll(".song-item");
+        if (songItems[currentSongIndex]) {
+          isScrolling = true;
+          songItems[currentSongIndex].scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+          });
+
+          // Set timeout untuk reset flag scrolling
+          setTimeout(() => {
+            isScrolling = false;
+          }, 500);
+        }
+      }
+
+      // Toggle shuffle
+      function toggleShuffle() {
+        isShuffle = !isShuffle;
+        shuffleBtn.style.color = isShuffle ? "var(--primary-color)" : "#fff";
+      }
+
+      // Toggle repeat
+      function toggleRepeat() {
+        isRepeat = !isRepeat;
+        repeatBtn.style.color = isRepeat ? "var(--primary-color)" : "#fff";
+        audio.loop = isRepeat;
+      }
+
+      // Toggle mute/unmute
+      function toggleMute() {
+        if (audio.volume > 0) {
+          previousVolume = audio.volume;
+          audio.volume = 0;
+          volumeSlider.value = 0;
+        } else {
+          audio.volume = previousVolume;
+          volumeSlider.value = previousVolume;
+        }
+      }
+
+      // Tampilkan loading state
+      function showLoadingState(show) {
+        if (show) {
+          albumCover.classList.add("loading");
+        } else {
+          albumCover.classList.remove("loading");
+        }
+      }
+
+      // Tampilkan pesan error
+      function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = "block";
+      }
+
+      // Sembunyikan pesan error
+      function hideError() {
+        errorMessage.style.display = "none";
+      }
+
+      // Event listeners
+      playBtn.addEventListener("click", () => {
+        if (isPlaying) {
+          pauseSong();
+        } else {
+          playSong();
+        }
+      });
+
+      nextBtn.addEventListener("click", nextSong);
+      prevBtn.addEventListener("click", prevSong);
+      shuffleBtn.addEventListener("click", toggleShuffle);
+      repeatBtn.addEventListener("click", toggleRepeat);
+
+      // Ketika lagu berakhir
+      audio.addEventListener("ended", () => {
+        if (!isRepeat) {
+          nextSong();
+        } else {
+          audio.currentTime = 0;
+          audio.play();
+        }
+      });
+
+      // Update progress bar
+      audio.addEventListener("timeupdate", updateProgress);
+
+      // Klik pada progress bar
+      progressContainer.addEventListener("click", setProgress);
+
+      // Ketika metadata audio dimuat (untuk mendapatkan durasi)
+      audio.addEventListener("loadedmetadata", () => {
+        durationEl.textContent = formatTime(audio.duration);
+        showLoadingState(false);
+      });
+
+      // Error handling
+      audio.addEventListener("error", () => {
+        showError("Gagal memuat lagu. Pastikan file audio tersedia.");
+        showLoadingState(false);
+      });
+
+      // Volume control
+      volumeSlider.addEventListener("input", (e) => {
+        audio.volume = e.target.value;
+        previousVolume = e.target.value;
+      });
+
+      // Keyboard shortcuts
+      document.addEventListener("keydown", (e) => {
+        switch (e.code) {
+          case "Space":
+            e.preventDefault();
+            if (isPlaying) {
+              pauseSong();
+            } else {
+              playSong();
+            }
+            break;
+          case "ArrowRight":
+            audio.currentTime += 5;
+            break;
+          case "ArrowLeft":
+            audio.currentTime -= 5;
+            break;
+          case "ArrowUp":
+            audio.volume = Math.min(audio.volume + 0.1, 1);
+            volumeSlider.value = audio.volume;
+            break;
+          case "ArrowDown":
+            audio.volume = Math.max(audio.volume - 0.1, 0);
+            volumeSlider.value = audio.volume;
+            break;
+          case "KeyM":
+            toggleMute();
+            break;
+        }
+      });
+
+      // Inisialisasi
+      populateSongList();
+      loadSong(songs[currentSongIndex]);
+      audio.volume = volumeSlider.value;
+    </script>
+  </body>
+</html>
