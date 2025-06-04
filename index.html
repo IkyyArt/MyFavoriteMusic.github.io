@@ -18,6 +18,9 @@
         --secondary-color: #9b59b6;
         --dark-color: #2c3e50;
         --light-color: #ecf0f1;
+        --anime-color: #e74c3c;
+        --tokusatsu-color: #3498db;
+        --international-color: #2ecc71;
       }
 
       * {
@@ -178,7 +181,7 @@
         max-height: 400px;
         overflow-y: auto;
         scroll-behavior: smooth;
-        padding-right: 5px; /* Memberi ruang untuk scrollbar */
+        padding-right: 5px;
       }
 
       .song-list-container {
@@ -274,39 +277,30 @@
       .playing .bar:nth-child(1) {
         animation-duration: 474ms;
       }
-
       .playing .bar:nth-child(2) {
         animation-duration: 433ms;
       }
-
       .playing .bar:nth-child(3) {
         animation-duration: 407ms;
       }
-
       .playing .bar:nth-child(4) {
         animation-duration: 458ms;
       }
-
       .playing .bar:nth-child(5) {
         animation-duration: 400ms;
       }
-
       .playing .bar:nth-child(6) {
         animation-duration: 427ms;
       }
-
       .playing .bar:nth-child(7) {
         animation-duration: 441ms;
       }
-
       .playing .bar:nth-child(8) {
         animation-duration: 419ms;
       }
-
       .playing .bar:nth-child(9) {
         animation-duration: 487ms;
       }
-
       .playing .bar:nth-child(10) {
         animation-duration: 442ms;
       }
@@ -344,38 +338,104 @@
         accent-color: var(--primary-color);
       }
 
-      /* Responsive adjustments */
-      @media (max-width: 768px) {
-        body {
-          padding: 15px;
-        }
+      /* Filter buttons */
+      .filter-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
 
-        .music-container {
-          margin: 0;
-          padding: 15px;
-          width: 100%;
-        }
+      .filter-btn {
+        padding: 6px 12px;
+        border-radius: 20px;
+        border: 1px solid var(--primary-color);
+        background: transparent;
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.8rem;
+      }
 
-        .row {
-          flex-direction: column;
-          margin: 0;
-        }
+      .filter-btn.active {
+        background-color: var(--primary-color);
+      }
 
-        .col-lg-5,
-        .col-lg-7 {
-          width: 100%;
-          padding: 0;
-        }
+      .filter-btn:hover {
+        background-color: rgba(142, 68, 173, 0.3);
+      }
 
-        .controls button {
-          margin: 0 5px;
-        }
+      /* Category filter buttons */
+      .category-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+      }
 
-        .controls .play-btn {
-          font-size: 24px;
-          width: 50px;
-          height: 50px;
-        }
+      .category-btn {
+        padding: 6px 12px;
+        border-radius: 20px;
+        border: none;
+        background: #333;
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.8rem;
+      }
+
+      .category-btn.active[data-category="anime"] {
+        background-color: var(--anime-color);
+      }
+
+      .category-btn.active[data-category="tokusatsu"] {
+        background-color: var(--tokusatsu-color);
+      }
+
+      .category-btn.active[data-category="international"] {
+        background-color: var(--international-color);
+      }
+
+      .category-btn.active[data-category="all"] {
+        background-color: var(--primary-color);
+      }
+
+      /* Search box */
+      .search-container {
+        margin-bottom: 15px;
+        position: relative;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 8px 15px;
+        border-radius: 20px;
+        border: none;
+        background-color: #2a2a2a;
+        color: #fff;
+        font-size: 0.9rem;
+      }
+
+      .search-input:focus {
+        outline: 1px solid var(--primary-color);
+      }
+
+      .search-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #bbb;
+      }
+
+      /* Song counter */
+      .song-counter {
+        text-align: right;
+        font-size: 0.8rem;
+        color: #bbb;
+        margin-bottom: 10px;
       }
 
       /* Loading state */
@@ -416,6 +476,173 @@
         margin-top: 10px;
         font-size: 0.9rem;
         display: none;
+      }
+
+      /* Responsive adjustments - Improved Mobile Layout */
+      @media (max-width: 768px) {
+        body {
+          padding: 10px;
+          display: block;
+          min-height: auto;
+        }
+
+        .music-container {
+          margin: 10px 0;
+          padding: 15px;
+          width: 100%;
+          border-radius: 10px;
+        }
+
+        .row {
+          flex-direction: column;
+          margin: 0;
+        }
+
+        .col-lg-5,
+        .col-lg-7 {
+          width: 100%;
+          padding: 0;
+        }
+
+        .album-cover {
+          max-width: 250px;
+          margin: 0 auto 15px;
+        }
+
+        .controls {
+          margin: 15px 0;
+          gap: 10px;
+        }
+
+        .controls button {
+          width: 45px;
+          height: 45px;
+          font-size: 20px;
+        }
+
+        .controls .play-btn {
+          width: 50px;
+          height: 50px;
+          font-size: 24px;
+        }
+
+        .song-details {
+          margin: 10px 0;
+        }
+
+        .song-details h3 {
+          font-size: 1.2rem;
+        }
+
+        .song-details p {
+          font-size: 0.9rem;
+        }
+
+        .time-info {
+          margin: 10px 0 5px;
+        }
+
+        .progress-container {
+          margin: 10px 0 5px;
+        }
+
+        .visualization {
+          height: 50px;
+          margin: 15px 0;
+        }
+
+        .volume-container {
+          margin-top: 10px;
+        }
+
+        /* Song list improvements */
+        .song-list-container {
+          margin-top: 20px;
+        }
+
+        .search-container {
+          margin-bottom: 10px;
+        }
+
+        .filter-buttons,
+        .category-buttons {
+          gap: 8px;
+          margin-bottom: 15px;
+        }
+
+        .filter-btn,
+        .category-btn {
+          padding: 5px 10px;
+          font-size: 0.75rem;
+        }
+
+        .song-counter {
+          margin-bottom: 8px;
+        }
+
+        .song-list {
+          max-height: 300px;
+          margin-top: 15px;
+        }
+
+        .song-item {
+          padding: 10px 12px;
+          margin-bottom: 6px;
+        }
+
+        .song-info .title {
+          font-size: 0.9rem;
+        }
+
+        .song-info .artist {
+          font-size: 0.8rem;
+        }
+
+        .duration {
+          font-size: 0.8rem;
+        }
+      }
+
+      /* Extra small devices (phones, 480px and down) */
+      @media (max-width: 480px) {
+        .music-container {
+          padding: 12px;
+        }
+
+        .album-cover {
+          max-width: 200px;
+        }
+
+        .controls button {
+          width: 40px;
+          height: 40px;
+          font-size: 18px;
+        }
+
+        .controls .play-btn {
+          width: 45px;
+          height: 45px;
+          font-size: 22px;
+        }
+
+        .song-details h3 {
+          font-size: 1.1rem;
+        }
+
+        .filter-buttons,
+        .category-buttons {
+          gap: 5px;
+        }
+
+        .filter-btn,
+        .category-btn {
+          padding: 4px 8px;
+          font-size: 0.7rem;
+        }
+
+        .song-list {
+          max-height: 250px;
+        }
       }
     </style>
   </head>
@@ -497,6 +724,41 @@
 
           <div class="col-lg-7">
             <div class="song-list-container">
+              <div class="search-container">
+                <input
+                  type="text"
+                  id="search-input"
+                  class="search-input"
+                  placeholder="Cari lagu atau artis..."
+                />
+                <i class="fas fa-search search-icon"></i>
+              </div>
+
+              <div class="category-buttons">
+                <button class="category-btn active" data-category="all">
+                  All
+                </button>
+                <button class="category-btn" data-category="anime">
+                  Anime
+                </button>
+                <button class="category-btn" data-category="tokusatsu">
+                  Tokusatsu
+                </button>
+                <button class="category-btn" data-category="international">
+                  International
+                </button>
+              </div>
+
+              <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="normal">Normal</button>
+                <button class="filter-btn" data-filter="speedup">
+                  Speed Up
+                </button>
+                <button class="filter-btn" data-filter="slowed">Slowed</button>
+              </div>
+
+              <div class="song-counter" id="song-counter">0 lagu</div>
               <div class="song-list" id="song-list">
                 <!-- Songs will be populated by JavaScript -->
               </div>
@@ -516,13 +778,17 @@
           cover: "Act a Fool.png",
           audioPath: "Act a Fool.mp3",
           duration: "7:49",
+          type: "normal",
+          category: "tokusatsu",
         },
         {
-          title: "jordin Sparks - Batterfield",
+          title: "Batterfield",
           artist: "Jordin Sparks",
           cover: "Battlfield.png",
           audioPath: "32 - Battlefield.mp3",
           duration: "7:49",
+          type: "normal",
+          category: "international",
         },
         {
           title: "Ultraman Medley - Old Vocal",
@@ -530,6 +796,8 @@
           cover: "???.png",
           audioPath: "Ultraman Medley Old Vocal.mp3",
           duration: "7:49",
+          type: "normal",
+          category: "tokusatsu",
         },
         {
           title: "Memories X Dear Sunrise",
@@ -537,6 +805,8 @@
           cover: "Memories X Dear Sunrise.png",
           audioPath: "Memories & Dear Sunrise.mp3",
           duration: "7:49",
+          type: "normal",
+          category: "anime",
         },
         {
           title: "Dear Sunrise",
@@ -544,6 +814,8 @@
           cover: "Dear Sunrise.png",
           audioPath: "Dear Sunrise.mp3",
           duration: "5:37",
+          type: "normal",
+          category: "anime",
         },
         {
           title: "Dear Sunrise - Slowed",
@@ -551,6 +823,8 @@
           cover: "Dear Sunrise - Slowed.png",
           audioPath: "Dear Sunrise - Slowed.mp3",
           duration: "5:37",
+          type: "slowed",
+          category: "anime",
         },
         {
           title: "Bury the Light",
@@ -558,6 +832,8 @@
           cover: "Bury The Light.jpg",
           audioPath: "Bury the Light.mp3",
           duration: "5:37",
+          type: "normal",
+          category: "anime",
         },
         {
           title: "Bury the Light - Ver Women",
@@ -565,6 +841,8 @@
           cover: "Bury The Light.jpg",
           audioPath: "Bury the Light - Ver Women.mp3",
           duration: "0:23",
+          type: "normal",
+          category: "anime",
         },
         {
           title: "Afterlife",
@@ -572,6 +850,8 @@
           cover: "jpg",
           audioPath: "AfterLife.mp3",
           duration: "5:37",
+          type: "normal",
+          category: "anime",
         },
         {
           title: "DMC 3 Lullabys - Ver Women",
@@ -579,6 +859,8 @@
           cover: "Bury The Light.jpg",
           audioPath: "DMC 3 Lullaby - Ver Women.mp3",
           duration: "5:37",
+          type: "normal",
+          category: "anime",
         },
         {
           title: "DMC 3 Lullabys - Ver Man",
@@ -586,6 +868,8 @@
           cover: "Bury The Light.jpg",
           audioPath: "DMC 3 Lullaby - Ver Man.mp3",
           duration: "5:37",
+          type: "normal",
+          category: "anime",
         },
         {
           title: "Killer Queen",
@@ -593,34 +877,44 @@
           cover: "KILLER QUEEN.jpg",
           audioPath: "Killer Queen Normal.mp3",
           duration: "4:25",
+          type: "normal",
+          category: "international",
         },
         {
           title: "Killer Queen - Speed Up",
-          artist: "Dewa 19",
+          artist: "Queen",
           cover: "KILLER QUEEN.jpg",
           audioPath: "Killer Queen Speed Up.mp3",
           duration: "3:00",
+          type: "speedup",
+          category: "international",
         },
         {
           title: "Killer Queen - Slowed",
-          artist: "Noah",
+          artist: "Queen",
           cover: "KILLER QUEEN.jpg",
           audioPath: "Killer Queen Slowed.mp3",
           duration: "3:39",
+          type: "slowed",
+          category: "international",
         },
         {
           title: "The Wonder Of You",
-          artist: "Nidji",
+          artist: "Elvis Presley",
           cover: "THE WONDER OF YOU.jpg",
           audioPath: "THE WONDER OF YOU NORMAL.mp3",
           duration: "2:29",
+          type: "normal",
+          category: "international",
         },
         {
-          title: "The Wonder Of You - SLowed Reverb",
-          artist: "Andmesh Kamaleng",
+          title: "The Wonder Of You - Slowed Reverb",
+          artist: "Elvis Presley",
           cover: "THE WONDER OF YOU.jpg",
           audioPath: "THE WONDER OF YOU SLOWED REVERB.mp3",
           duration: "3:12",
+          type: "slowed",
+          category: "international",
         },
       ];
 
@@ -641,6 +935,10 @@
       const visualization = document.getElementById("visualization");
       const volumeSlider = document.getElementById("volume");
       const errorMessage = document.getElementById("error-message");
+      const searchInput = document.getElementById("search-input");
+      const filterButtons = document.querySelectorAll(".filter-btn");
+      const categoryButtons = document.querySelectorAll(".category-btn");
+      const songCounter = document.getElementById("song-counter");
 
       // Elemen audio
       const audio = new Audio();
@@ -653,28 +951,79 @@
       let previousVolume = 0.7;
       let isChangingSong = false;
       let isScrolling = false;
+      let currentFilter = "all";
+      let currentCategory = "all";
+      let currentSearchTerm = "";
+      let filteredSongs = [...songs];
 
       // Mengisi daftar lagu
       function populateSongList() {
         songList.innerHTML = "";
-        songs.forEach((song, index) => {
+
+        // Filter songs based on current filter, category and search term
+        filteredSongs = songs.filter((song) => {
+          const matchesFilter =
+            currentFilter === "all" || song.type === currentFilter;
+          const matchesCategory =
+            currentCategory === "all" || song.category === currentCategory;
+          const matchesSearch =
+            currentSearchTerm === "" ||
+            song.title.toLowerCase().includes(currentSearchTerm) ||
+            song.artist.toLowerCase().includes(currentSearchTerm);
+          return matchesFilter && matchesCategory && matchesSearch;
+        });
+
+        // Update song counter
+        songCounter.textContent = `${filteredSongs.length} lagu`;
+
+        if (filteredSongs.length === 0) {
+          const emptyMessage = document.createElement("div");
+          emptyMessage.classList.add("text-center", "py-3");
+          emptyMessage.textContent = "Tidak ada lagu yang ditemukan";
+          songList.appendChild(emptyMessage);
+          return;
+        }
+
+        filteredSongs.forEach((song, index) => {
+          const originalIndex = songs.findIndex(
+            (s) =>
+              s.title === song.title &&
+              s.artist === song.artist &&
+              s.audioPath === song.audioPath
+          );
+
           const songItem = document.createElement("div");
           songItem.classList.add("song-item");
-          if (index === currentSongIndex) {
+          if (originalIndex === currentSongIndex) {
             songItem.classList.add("active");
           }
 
+          // Add category indicator
+          let categoryClass = "";
+          if (song.category === "anime") categoryClass = "anime";
+          else if (song.category === "tokusatsu") categoryClass = "tokusatsu";
+          else if (song.category === "international")
+            categoryClass = "international";
+
           songItem.innerHTML = `
-            <div class="song-info">
-              <div class="title">${song.title}</div>
-              <div class="artist">${song.artist}</div>
-            </div>
-            <div class="duration">${song.duration}</div>
-          `;
+                    <div class="song-info">
+                        <div class="title">${song.title} <span class="category-indicator ${categoryClass}"></span></div>
+                        <div class="artist">${song.artist}</div>
+                    </div>
+                    <div class="duration">${song.duration}</div>
+                `;
 
           songItem.addEventListener("click", () => {
             if (isChangingSong || isScrolling) return;
             isChangingSong = true;
+
+            // Find the original index of the clicked song
+            currentSongIndex = songs.findIndex(
+              (s) =>
+                s.title === song.title &&
+                s.artist === song.artist &&
+                s.audioPath === song.audioPath
+            );
 
             // Hapus kelas aktif dari semua item
             document.querySelectorAll(".song-item").forEach((item) => {
@@ -684,7 +1033,6 @@
             // Tambahkan kelas aktif ke item yang diklik
             songItem.classList.add("active");
 
-            currentSongIndex = index;
             loadSong(songs[currentSongIndex]);
             playSong();
             scrollToCurrentSong();
@@ -862,9 +1210,19 @@
       // Scroll ke lagu yang sedang aktif
       function scrollToCurrentSong() {
         const songItems = document.querySelectorAll(".song-item");
-        if (songItems[currentSongIndex]) {
+        const currentSong = songs[currentSongIndex];
+
+        // Find the index in filtered songs
+        const filteredIndex = filteredSongs.findIndex(
+          (song) =>
+            song.title === currentSong.title &&
+            song.artist === currentSong.artist &&
+            song.audioPath === currentSong.audioPath
+        );
+
+        if (songItems[filteredIndex]) {
           isScrolling = true;
-          songItems[currentSongIndex].scrollIntoView({
+          songItems[filteredIndex].scrollIntoView({
             behavior: "smooth",
             block: "nearest",
           });
@@ -967,6 +1325,32 @@
       volumeSlider.addEventListener("input", (e) => {
         audio.volume = e.target.value;
         previousVolume = e.target.value;
+      });
+
+      // Search functionality
+      searchInput.addEventListener("input", (e) => {
+        currentSearchTerm = e.target.value.toLowerCase();
+        populateSongList();
+      });
+
+      // Filter buttons (type)
+      filterButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          filterButtons.forEach((btn) => btn.classList.remove("active"));
+          button.classList.add("active");
+          currentFilter = button.dataset.filter;
+          populateSongList();
+        });
+      });
+
+      // Category buttons
+      categoryButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          categoryButtons.forEach((btn) => btn.classList.remove("active"));
+          button.classList.add("active");
+          currentCategory = button.dataset.category;
+          populateSongList();
+        });
       });
 
       // Keyboard shortcuts
