@@ -537,8 +537,27 @@
         box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
       }
 
+      /* Ganti ini */
       .category-btn:hover {
         transform: translateY(-2px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Menjadi ini */
+      .category-btn:hover {
+        transform: none; /* Hapus translateY */
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Atau alternatif jika ingin tetap ada animasi */
+      .category-btn {
+        will-change: transform; /* Optimalkan rendering */
+        transition: all 0.3s ease, transform 0.1s ease; /* Pisahkan transition */
+      }
+
+      .category-btn:hover {
+        transform: translateY(-1px); /* Kurangi jarak translate */
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
       }
 
