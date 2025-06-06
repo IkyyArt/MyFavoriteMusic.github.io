@@ -48,6 +48,33 @@
         width: 100%;
       }
 
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #1e1e2f, #2d3436) fixed;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, #1e1e2f, #2d3436);
+        z-index: -1;
+      }
+
+      body {
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
       .container {
         max-width: 100%;
         padding-right: 15px;
