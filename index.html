@@ -1100,6 +1100,24 @@
       // Data lagu
       const songs = [
         {
+          title: "Pocari Sweet - Zenryoku Shounen",
+          artist: "Sukima Switch",
+          cover: "PocariSweet.png",
+          audioPath: "PocariSweet.mp3",
+          duration: "3:28",
+          type: "normal",
+          category: "anime",
+        },
+        {
+          title: "Dandadan Op 1",
+          artist: "Creepy Nuts",
+          cover: "DanDaDan.jpg",
+          audioPath: "DAN DA DAN - Opening  Otonoke by Creepy Nuts.mp3",
+          duration: "3:28",
+          type: "normal",
+          category: "anime",
+        },
+        {
           title: "Dragon Raja",
           artist: "Tencent",
           cover: "DragonRaja.jpg",
@@ -1973,6 +1991,15 @@
 
         // INTERNATIONAL
         {
+          title: "The Winner Takes It All",
+          artist: "ABBA",
+          cover: "TWITA.png",
+          audioPath: "TWITA.mp3",
+          duration: "7:49",
+          type: "normal",
+          category: "international",
+        },
+        {
           title: "Act a Fool",
           artist: "???",
           cover: "Act a Fool.png",
@@ -2035,11 +2062,42 @@
           type: "slowed",
           category: "international",
         },
+
+        // LOCAL
+        {
+          title: "Salahkah Kita - Speed Up",
+          artist: "Irwansyah",
+          cover: "MSM.png",
+          audioPath:
+            "ytmp3free.cc_salah-kah-kita-speed-up-14-youtubemp3free.org.mp3",
+          duration: "3:12",
+          type: "slowed",
+          category: "local",
+        },
+        {
+          title: "Mencintaimu Sampai Mati - Speed Up",
+          artist: "Utopia",
+          cover: "MSM.png",
+          audioPath:
+            "ytmp3free.cc_mencintaimu-sampai-mati-utopia-speed-up-youtubemp3free.org.mp3",
+          duration: "3:12",
+          type: "slowed",
+          category: "local",
+        },
         {
           title: "Tentang Perasaanku - Speed Up",
           artist: "Irwansyah",
           cover: "TP.png",
           audioPath: "Tentang Perasaanku.mp3",
+          duration: "3:12",
+          type: "slowed",
+          category: "local",
+        },
+        {
+          title: "Pecinta Wanita - Speed Up",
+          artist: "Irwansyah",
+          cover: "PW.png",
+          audioPath: "pencinta wanita - Irwansyah (speed up).mp3",
           duration: "3:12",
           type: "slowed",
           category: "local",
@@ -2132,6 +2190,7 @@
           else if (song.category === "tokusatsu") categoryClass = "tokusatsu";
           else if (song.category === "international")
             categoryClass = "international";
+          else if (song.category === "local") categoryClass = "local"; // Tambahkan ini
 
           songItem.innerHTML = `
                     <div class="song-info">
