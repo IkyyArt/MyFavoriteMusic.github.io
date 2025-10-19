@@ -96,10 +96,34 @@
         box-sizing: border-box;
         border: 1px solid rgba(255, 255, 255, 0.1);
         transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .music-container::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(108, 92, 231, 0.1) 0%,
+          transparent 70%
+        );
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        z-index: -1;
+      }
+
+      .music-container:hover::before {
+        opacity: 1;
       }
 
       .music-container:hover {
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        transform: translateY(-5px);
       }
 
       .row {
@@ -353,72 +377,84 @@
         margin-bottom: 10px;
       }
 
+      /* Enhanced Audio Visualization */
+      .visualization-container {
+        position: relative;
+        width: 100%;
+        height: 80px;
+        margin: 25px 0;
+        overflow: hidden;
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.2);
+      }
+
       .visualization {
         display: flex;
         justify-content: center;
         align-items: flex-end;
-        height: 80px;
-        margin: 25px 0;
-        gap: 6px;
+        height: 100%;
+        gap: 4px;
+        padding: 0 10px;
+        position: relative;
       }
 
       .bar {
+        width: 8px;
+        border-radius: 4px;
         background: linear-gradient(
           to top,
           var(--primary-color),
           var(--secondary-color)
         );
-        width: 8px;
+        transition: height 0.2s ease;
+        position: relative;
+        box-shadow: 0 0 5px rgba(108, 92, 231, 0.5);
+      }
+
+      .bar::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100%;
+        background: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
         border-radius: 4px;
-        animation: none;
-        height: 5px;
-        transition: height 0.3s ease;
       }
 
-      .playing .bar {
-        animation: sound 0ms -800ms linear infinite alternate;
+      .visualization-wave {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(108, 92, 231, 0.2) 0%,
+          transparent 70%
+        );
+        opacity: 0;
+        transition: opacity 0.3s ease;
       }
 
-      @keyframes sound {
+      .playing .visualization-wave {
+        opacity: 1;
+        animation: wavePulse 2s infinite alternate;
+      }
+
+      @keyframes wavePulse {
         0% {
-          height: 5px;
-          opacity: 0.4;
+          transform: scale(1);
+          opacity: 0.5;
         }
         100% {
-          height: 100%;
-          opacity: 1;
+          transform: scale(1.2);
+          opacity: 0.8;
         }
-      }
-
-      .playing .bar:nth-child(1) {
-        animation-duration: 474ms;
-      }
-      .playing .bar:nth-child(2) {
-        animation-duration: 433ms;
-      }
-      .playing .bar:nth-child(3) {
-        animation-duration: 407ms;
-      }
-      .playing .bar:nth-child(4) {
-        animation-duration: 458ms;
-      }
-      .playing .bar:nth-child(5) {
-        animation-duration: 400ms;
-      }
-      .playing .bar:nth-child(6) {
-        animation-duration: 427ms;
-      }
-      .playing .bar:nth-child(7) {
-        animation-duration: 441ms;
-      }
-      .playing .bar:nth-child(8) {
-        animation-duration: 419ms;
-      }
-      .playing .bar:nth-child(9) {
-        animation-duration: 487ms;
-      }
-      .playing .bar:nth-child(10) {
-        animation-duration: 442ms;
       }
 
       /* Scrollbar styling */
@@ -564,16 +600,15 @@
         box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
       }
 
-      /* GANTI INI */
       .category-btn:hover,
       .filter-btn:hover {
-        transform: none; /* Hapus translateY */
-        box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3); /* Efek glow ungu */
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
       }
 
       .category-btn,
       .filter-btn {
-        transform: translateZ(0); /* Trik optimasi GPU */
+        transform: translateZ(0);
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       }
 
@@ -803,7 +838,7 @@
           margin: 15px 0 10px;
         }
 
-        .visualization {
+        .visualization-container {
           height: 70px;
           margin: 20px 0;
         }
@@ -957,6 +992,57 @@
       .play-btn.playing {
         animation: pulseBtn 1.5s infinite;
       }
+
+      /* Enhanced animations for song list */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .song-item {
+        animation: fadeInUp 0.5s ease forwards;
+        opacity: 0;
+      }
+
+      .song-item:nth-child(1) {
+        animation-delay: 0.05s;
+      }
+      .song-item:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .song-item:nth-child(3) {
+        animation-delay: 0.15s;
+      }
+      .song-item:nth-child(4) {
+        animation-delay: 0.2s;
+      }
+      .song-item:nth-child(5) {
+        animation-delay: 0.25s;
+      }
+      .song-item:nth-child(6) {
+        animation-delay: 0.3s;
+      }
+      .song-item:nth-child(7) {
+        animation-delay: 0.35s;
+      }
+      .song-item:nth-child(8) {
+        animation-delay: 0.4s;
+      }
+      .song-item:nth-child(9) {
+        animation-delay: 0.45s;
+      }
+      .song-item:nth-child(10) {
+        animation-delay: 0.5s;
+      }
+      .song-item:nth-child(n + 11) {
+        animation-delay: 0.55s;
+      }
     </style>
   </head>
   <body>
@@ -983,17 +1069,11 @@
               />
             </div>
 
-            <div class="visualization" id="visualization">
-              <div class="bar"></div>
-              <div class="bar"></div>
-              <div class="bar"></div>
-              <div class="bar"></div>
-              <div class="bar"></div>
-              <div class="bar"></div>
-              <div class="bar"></div>
-              <div class="bar"></div>
-              <div class="bar"></div>
-              <div class="bar"></div>
+            <div class="visualization-container">
+              <div class="visualization" id="visualization">
+                <!-- Bars will be generated by JavaScript -->
+              </div>
+              <div class="visualization-wave"></div>
             </div>
 
             <div class="song-details text-center">
@@ -1097,8 +1177,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      // Data lagu
+      // Data lagu (sama seperti sebelumnya, tapi dipotong untuk singkatnya)
       const songs = [
+        // ... your song data remains the same
         {
           title: "Attack On Titan - Feuerroter pfeil und Bogen",
           artist: "Linked Horizon",
@@ -2517,6 +2598,14 @@
       // Elemen audio
       const audio = new Audio();
 
+      // Audio context untuk visualisasi
+      let audioContext;
+      let analyser;
+      let dataArray;
+      let bufferLength;
+      let source;
+      let animationId;
+
       // Status musik
       let isPlaying = false;
       let currentSongIndex = 0;
@@ -2529,6 +2618,49 @@
       let currentCategory = "all";
       let currentSearchTerm = "";
       let filteredSongs = [...songs];
+
+      // Setup audio visualization
+      function setupAudioVisualization() {
+        // Create audio context
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        source = audioContext.createMediaElementSource(audio);
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+
+        analyser.fftSize = 256;
+        bufferLength = analyser.frequencyBinCount;
+        dataArray = new Uint8Array(bufferLength);
+
+        // Create visualization bars
+        visualization.innerHTML = "";
+        const barCount = Math.floor(visualization.clientWidth / 12);
+
+        for (let i = 0; i < barCount; i++) {
+          const bar = document.createElement("div");
+          bar.classList.add("bar");
+          bar.style.height = "5px";
+          visualization.appendChild(bar);
+        }
+      }
+
+      // Update visualization
+      function updateVisualization() {
+        if (!analyser || !isPlaying) return;
+
+        analyser.getByteFrequencyData(dataArray);
+
+        const bars = document.querySelectorAll(".bar");
+        const barCount = bars.length;
+
+        for (let i = 0; i < barCount; i++) {
+          const value = dataArray[i % bufferLength];
+          const height = Math.max(5, (value / 255) * 100);
+          bars[i].style.height = `${height}%`;
+        }
+
+        animationId = requestAnimationFrame(updateVisualization);
+      }
 
       // Mengisi daftar lagu
       function populateSongList() {
@@ -2578,7 +2710,7 @@
           else if (song.category === "tokusatsu") categoryClass = "tokusatsu";
           else if (song.category === "international")
             categoryClass = "international";
-          else if (song.category === "local") categoryClass = "local"; // Tambahkan ini
+          else if (song.category === "local") categoryClass = "local";
 
           songItem.innerHTML = `
                     <div class="song-info">
@@ -2669,8 +2801,21 @@
         isPlaying = true;
         playBtn.innerHTML = '<i class="fas fa-pause"></i>';
         playBtn.setAttribute("title", "Jeda");
+        playBtn.classList.add("playing");
         albumCover.classList.add("playing");
-        visualization.classList.add("playing");
+
+        // Setup audio visualization if not already done
+        if (!audioContext) {
+          setupAudioVisualization();
+        }
+
+        // Resume audio context if suspended
+        if (audioContext.state === "suspended") {
+          audioContext.resume();
+        }
+
+        // Start visualization
+        updateVisualization();
 
         audio
           .play()
@@ -2689,15 +2834,17 @@
         isPlaying = false;
         playBtn.innerHTML = '<i class="fas fa-play"></i>';
         playBtn.setAttribute("title", "Putar");
+        playBtn.classList.remove("playing");
         albumCover.classList.remove("playing");
-        visualization.classList.remove("playing");
         showLoadingState(false);
+
+        // Stop visualization
+        cancelAnimationFrame(animationId);
 
         audio.pause();
       }
 
       // Lagu selanjutnya
-      // Ganti fungsi nextSong dan prevSong dengan ini:
       function nextSong() {
         if (isChangingSong || filteredSongs.length === 0) return;
         isChangingSong = true;
@@ -2769,6 +2916,7 @@
         }, 300);
       }
 
+      // Lagu sebelumnya
       function prevSong() {
         if (audio.currentTime > 3) {
           audio.currentTime = 0;
@@ -2842,57 +2990,6 @@
         }, 300);
       }
 
-      // Lagu sebelumnya
-      function prevSong() {
-        if (audio.currentTime > 3) {
-          // Jika lagu sudah berjalan lebih dari 3 detik, kembali ke awal lagu
-          audio.currentTime = 0;
-        } else {
-          // Jika tidak, pindah ke lagu sebelumnya
-          if (isChangingSong) return;
-          isChangingSong = true;
-
-          // Hapus kelas aktif dari semua item
-          document.querySelectorAll(".song-item").forEach((item) => {
-            item.classList.remove("active");
-          });
-
-          if (isShuffle) {
-            currentSongIndex = getRandomIndex();
-          } else {
-            currentSongIndex =
-              (currentSongIndex - 1 + songs.length) % songs.length;
-          }
-
-          // Tambahkan kelas aktif ke item baru
-          const songItems = document.querySelectorAll(".song-item");
-          if (songItems[currentSongIndex]) {
-            songItems[currentSongIndex].classList.add("active");
-          }
-
-          loadSong(songs[currentSongIndex]);
-          scrollToCurrentSong();
-
-          if (isPlaying) {
-            playSong();
-          }
-
-          // Reset flag setelah animasi selesai
-          setTimeout(() => {
-            isChangingSong = false;
-          }, 300);
-        }
-      }
-
-      // Dapatkan indeks acak untuk shuffle
-      function getRandomIndex() {
-        let newIndex;
-        do {
-          newIndex = Math.floor(Math.random() * songs.length);
-        } while (newIndex === currentSongIndex && songs.length > 1);
-        return newIndex;
-      }
-
       // Scroll ke lagu yang sedang aktif
       function scrollToCurrentSong() {
         const songItems = document.querySelectorAll(".song-item");
@@ -2920,7 +3017,7 @@
         }
       }
 
-      // Perbaikan fungsi toggleShuffle
+      // Toggle shuffle
       function toggleShuffle() {
         isShuffle = !isShuffle;
         shuffleBtn.style.color = isShuffle ? "var(--primary-color)" : "#fff";
@@ -2946,153 +3043,6 @@
           }
           populateSongList(); // Update UI untuk menandai lagu aktif
         }
-      }
-
-      // Hapus fungsi getRandomIndex() yang lama karena tidak digunakan lagi
-
-      // Perbaikan fungsi nextSong untuk shuffle dengan filter
-      function nextSong() {
-        if (isChangingSong || filteredSongs.length === 0) return;
-        isChangingSong = true;
-
-        // Hapus kelas aktif dari semua item
-        document
-          .querySelectorAll(".song-item")
-          .forEach((item) => item.classList.remove("active"));
-
-        if (isShuffle) {
-          // Dapatkan lagu acak dari filteredSongs
-          const randomFilteredIndex = Math.floor(
-            Math.random() * filteredSongs.length
-          );
-          const randomSong = filteredSongs[randomFilteredIndex];
-
-          currentSongIndex = songs.findIndex(
-            (song) =>
-              song.title === randomSong.title &&
-              song.artist === randomSong.artist &&
-              song.audioPath === randomSong.audioPath
-          );
-        } else {
-          // Cari lagu berikutnya dalam filteredSongs
-          const currentFilteredIndex = filteredSongs.findIndex(
-            (song) =>
-              song.title === songs[currentSongIndex].title &&
-              song.artist === songs[currentSongIndex].artist &&
-              song.audioPath === songs[currentSongIndex].audioPath
-          );
-
-          const nextFilteredIndex =
-            (currentFilteredIndex + 1) % filteredSongs.length;
-          const nextSong = filteredSongs[nextFilteredIndex];
-
-          currentSongIndex = songs.findIndex(
-            (song) =>
-              song.title === nextSong.title &&
-              song.artist === nextSong.artist &&
-              song.audioPath === nextSong.audioPath
-          );
-        }
-
-        loadSong(songs[currentSongIndex]);
-
-        // Update UI
-        const songItems = document.querySelectorAll(".song-item");
-        const activeIndex = [...filteredSongs].findIndex(
-          (song) =>
-            song.title === songs[currentSongIndex].title &&
-            song.artist === songs[currentSongIndex].artist &&
-            song.audioPath === songs[currentSongIndex].audioPath
-        );
-
-        if (songItems[activeIndex]) {
-          songItems[activeIndex].classList.add("active");
-        }
-
-        if (isPlaying) {
-          playSong();
-        }
-
-        scrollToCurrentSong();
-
-        setTimeout(() => {
-          isChangingSong = false;
-        }, 300);
-      }
-
-      // Perbaikan fungsi prevSong untuk shuffle dengan filter
-      function prevSong() {
-        if (audio.currentTime > 3) {
-          audio.currentTime = 0;
-          return;
-        }
-
-        if (isChangingSong || filteredSongs.length === 0) return;
-        isChangingSong = true;
-
-        document
-          .querySelectorAll(".song-item")
-          .forEach((item) => item.classList.remove("active"));
-
-        if (isShuffle) {
-          // Dapatkan lagu acak dari filteredSongs
-          const randomFilteredIndex = Math.floor(
-            Math.random() * filteredSongs.length
-          );
-          const randomSong = filteredSongs[randomFilteredIndex];
-
-          currentSongIndex = songs.findIndex(
-            (song) =>
-              song.title === randomSong.title &&
-              song.artist === randomSong.artist &&
-              song.audioPath === randomSong.audioPath
-          );
-        } else {
-          // Cari lagu sebelumnya dalam filteredSongs
-          const currentFilteredIndex = filteredSongs.findIndex(
-            (song) =>
-              song.title === songs[currentSongIndex].title &&
-              song.artist === songs[currentSongIndex].artist &&
-              song.audioPath === songs[currentSongIndex].audioPath
-          );
-
-          const prevFilteredIndex =
-            (currentFilteredIndex - 1 + filteredSongs.length) %
-            filteredSongs.length;
-          const prevSong = filteredSongs[prevFilteredIndex];
-
-          currentSongIndex = songs.findIndex(
-            (song) =>
-              song.title === prevSong.title &&
-              song.artist === prevSong.artist &&
-              song.audioPath === prevSong.audioPath
-          );
-        }
-
-        loadSong(songs[currentSongIndex]);
-
-        // Update UI
-        const songItems = document.querySelectorAll(".song-item");
-        const activeIndex = [...filteredSongs].findIndex(
-          (song) =>
-            song.title === songs[currentSongIndex].title &&
-            song.artist === songs[currentSongIndex].artist &&
-            song.audioPath === songs[currentSongIndex].audioPath
-        );
-
-        if (songItems[activeIndex]) {
-          songItems[activeIndex].classList.add("active");
-        }
-
-        if (isPlaying) {
-          playSong();
-        }
-
-        scrollToCurrentSong();
-
-        setTimeout(() => {
-          isChangingSong = false;
-        }, 300);
       }
 
       // Toggle repeat
