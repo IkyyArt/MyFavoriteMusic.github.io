@@ -17,6 +17,7 @@
       rel="stylesheet"
     />
     <style>
+      /* CSS Anda yang sudah ada (tetap sama) */
       :root {
         --primary-color: #6c5ce7;
         --secondary-color: #a29bfe;
@@ -46,6 +47,46 @@
         align-items: center;
         overflow-x: hidden;
         width: 100%;
+        position: relative;
+      }
+
+      /* Video Background */
+      .video-background-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+      }
+
+      .video-background-container.active {
+        opacity: 1;
+      }
+
+      .video-background-container video {
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+      }
+
+      .video-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 1;
       }
 
       html,
@@ -53,10 +94,6 @@
         height: 100%;
         margin: 0;
         padding: 0;
-        background: linear-gradient(135deg, #1e1e2f, #2d3436) fixed;
-        background-attachment: fixed;
-        background-repeat: no-repeat;
-        background-size: cover;
       }
 
       body::after {
@@ -67,7 +104,7 @@
         right: 0;
         bottom: 0;
         background: linear-gradient(135deg, #1e1e2f, #2d3436);
-        z-index: -1;
+        z-index: -2;
       }
 
       body {
@@ -82,6 +119,8 @@
         margin-right: auto;
         margin-left: auto;
         width: 100%;
+        position: relative;
+        z-index: 1;
       }
 
       .music-container {
@@ -1046,6 +1085,12 @@
     </style>
   </head>
   <body>
+    <!-- Video Background -->
+    <div class="video-background-container">
+      <video id="backgroundVideo" autoplay loop muted playsinline></video>
+      <div class="video-overlay"></div>
+    </div>
+
     <div class="container">
       <div class="music-container">
         <h1
@@ -1177,15 +1222,16 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      // Data lagu (sama seperti sebelumnya, tapi dipotong untuk singkatnya)
+      // Data lagu dengan video background
       const songs = [
-        // ... your song data remains the same
         {
           title: "Attack On Titan - Feuerroter pfeil und Bogen",
           artist: "Linked Horizon",
           cover: "YEAGER.jpg",
           audioPath:
             "Attack on Titan - Opening 1  Feuerroter Pfeil und Bogen.mp3",
+          videoBgSrc:
+            "Attack on Titan Opening 1 _ Feuerroter Pfeil und Bogen.mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1195,6 +1241,8 @@
           artist: "Linked Horizon",
           cover: "TSUBASA.jpg",
           audioPath: "Attack on Titan  Opening 2  Jiyuu no Tsubasa.mp3",
+          videoBgSrc:
+            "Attack on Titan Opening 2 _ Jiyuu no Tsubasa by Linked Horizon.mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1205,6 +1253,7 @@
           cover: "SASAGEYO.jpg",
           audioPath:
             "Attack on Titan Season 2 - Opening  Shinzou wo Sasageyo!.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1215,6 +1264,7 @@
           cover: "RED SWAN.jpg",
           audioPath:
             "Attack on Titan  Shingeki no Kyojin Season 3 OP Red Swan YOSHIKI feat. HYDE ᴴᴰ.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1225,6 +1275,7 @@
           cover: "bla bla.jpg",
           audioPath:
             "Shingeki no kyojin opening 5 Shoukei to Shikabane no Michi Linked Horizon [1080p].mp3",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1235,6 +1286,7 @@
           cover: "LAVIDAS.jpg",
           audioPath:
             "TVアニメ進撃の巨人The Final Season Part 1ノンクレジットOP神聖かまってちゃん僕の戦争.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1245,6 +1297,7 @@
           cover: "RUMBLING.jpg",
           audioPath:
             "TVアニメ進撃の巨人The Final Season Part 2ノンクレジットOP SiMThe Rumbling.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1255,6 +1308,7 @@
           cover: "YUUGURE.png",
           audioPath:
             "Attack on Titan - Ending 3 Yuugure no Tori 4K  UHD Creditless  CC.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1265,6 +1319,7 @@
           cover: "AKATSUKI NO REQUIEM.jpg",
           audioPath:
             "Attack on Titan - Ending 4 Akatsuki no Chinkonka 4K  UHD Creditless  CC.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1275,6 +1330,7 @@
           cover: "SHOUGEKI.jpg",
           audioPath:
             "Attack on Titan - Ending 6 Shougeki 4K  UHD Creditless  CC.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1285,6 +1341,7 @@
           cover: "AKUMA NO KO.jpg",
           audioPath:
             "Attack on Titan - Ending 7 Akuma no Ko 4K  UHD Creditless  CC.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1295,6 +1352,7 @@
           cover: "UNDER THE TREE.jpg",
           audioPath:
             "Attack on Titan - The Final Season Part 3 - Special Theme UNDER THE TREE 4K  UHD  CC.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1305,6 +1363,7 @@
           cover: "SEIGO.jpg",
           audioPath:
             "Attack on Titan - Opening 8 Saigo no Kyojin 4K  UHD Creditless  CC.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1315,6 +1374,7 @@
           cover: "ITTERASHAI.jpg",
           audioPath:
             "Attack on Titan - Ending 8 Itterasshai 4K  UHD Creditless  CC.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1324,6 +1384,7 @@
           artist: "King Gnu",
           cover: "Sakayume.png",
           audioPath: "Sakayume.mp3",
+          videoBgSrc: ".mp4",
           duration: "5:19",
           type: "normal",
           category: "anime",
@@ -1334,6 +1395,7 @@
           cover: "SakayumeSlowed.png",
           audioPath:
             "sakayume - king gnu __ slowed and reverb-yt.savetube.me.mp3",
+          videoBgSrc: ".mp4",
           duration: "6:17",
           type: "slowed",
           category: "anime",
@@ -1343,6 +1405,7 @@
           artist: "King Gnu",
           cover: "SakayumeEnglish.png",
           audioPath: "SakayumeEnglish.mp3",
+          videoBgSrc: ".mp4",
           duration: "2:23",
           type: "normal",
           category: "anime",
@@ -1353,6 +1416,7 @@
           cover: "Sakamoto.jpg",
           audioPath:
             "SAKAMOTO DAYS OP _ RUN SAKAMOTO RUN by Vaundy _ Netflix Anime-yt.savetube.me.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "anime",
@@ -1363,6 +1427,7 @@
           cover: "SakamotoSlowed.jpg",
           audioPath:
             "Sakamoto days - Opening Full song (Slowed-Reverb)-yt.savetube.me.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "anime",
@@ -1372,6 +1437,7 @@
           artist: "Maki Otsuki",
           cover: "Memories X Dear Sunrise.png",
           audioPath: "Memories & Dear Sunrise.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "anime",
@@ -1381,6 +1447,7 @@
           artist: "Maki Otsuki",
           cover: "Dear Sunrise.png",
           audioPath: "Dear Sunrise.mp3",
+          videoBgSrc: ".mp4",
           duration: "5:37",
           type: "normal",
           category: "anime",
@@ -1390,6 +1457,7 @@
           artist: "Maki Otsuki",
           cover: "Dear Sunrise - Slowed.png",
           audioPath: "Dear Sunrise - Slowed.mp3",
+          videoBgSrc: ".mp4",
           duration: "5:37",
           type: "slowed",
           category: "anime",
@@ -1399,6 +1467,7 @@
           artist: "Creepy Nuts",
           cover: "DanDaDan.jpg",
           audioPath: "DAN DA DAN - Opening  Otonoke by Creepy Nuts.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1408,6 +1477,7 @@
           artist: "Vradnyanaz",
           cover: "JJBA1-5INDONESIA.jpeg",
           audioPath: "JJBA1-5.mp3",
+          videoBgSrc: ".mp4",
           duration: "15:50",
           type: "normal",
           category: "anime",
@@ -1418,6 +1488,7 @@
           cover: "jpeg",
           audioPath:
             "ytmp3free.cc_johnny-joestar-x-giorno-themejojo-steel-ball-run-trailer-ost-epic-mashup-golden-balls-of-steel-youtubemp3free.org.mp3",
+          videoBgSrc: ".mp4",
           duration: "15:50",
           type: "normal",
           category: "anime",
@@ -1427,6 +1498,7 @@
           artist: "David Production",
           cover: "JJBA1-6.jpeg",
           audioPath: "JJBA1-6.mp3",
+          videoBgSrc: ".mp4",
           duration: "15:50",
           type: "normal",
           category: "anime",
@@ -1436,6 +1508,7 @@
           artist: "David Production",
           cover: "JJBA1.jpeg",
           audioPath: "JJBA1.mp3",
+          videoBgSrc: ".mp4",
           duration: "15:50",
           type: "normal",
           category: "anime",
@@ -1445,6 +1518,7 @@
           artist: "David Production",
           cover: "JJBA2.jpeg",
           audioPath: "JJBA2.mp3",
+          videoBgSrc: ".mp4",
           duration: "15:50",
           type: "normal",
           category: "anime",
@@ -1454,6 +1528,7 @@
           artist: "David Production",
           cover: "JJBA3.jpeg",
           audioPath: "JJBA3.mp3",
+          videoBgSrc: ".mp4",
           duration: "15:50",
           type: "normal",
           category: "anime",
@@ -1463,6 +1538,7 @@
           artist: "David Production",
           cover: "JJBA4.jpeg",
           audioPath: "JJBA3.2.mp3",
+          videoBgSrc: ".mp4",
           duration: "15:50",
           type: "normal",
           category: "anime",
@@ -1472,6 +1548,7 @@
           artist: "David Production",
           cover: "JJBA5.jpeg",
           audioPath: "JJBA4.mp3",
+          videoBgSrc: ".mp4",
           duration: "15:50",
           type: "normal",
           category: "anime",
@@ -1481,6 +1558,7 @@
           artist: "David Production",
           cover: "JJBA6.jpeg",
           audioPath: "JJBA4.2.mp3",
+          videoBgSrc: ".mp4",
           duration: "15:50",
           type: "normal",
           category: "anime",
@@ -1490,6 +1568,7 @@
           artist: "David Production",
           cover: "JJBA7.jpeg",
           audioPath: "JJBA4.3.mp3",
+          videoBgSrc: ".mp4",
           duration: "15:50",
           type: "normal",
           category: "anime",
@@ -1499,6 +1578,7 @@
           artist: "David Production",
           cover: "JJBA8.jpeg",
           audioPath: "JJBA5.mp3",
+          videoBgSrc: ".mp4",
           duration: "15:50",
           type: "normal",
           category: "anime",
@@ -1508,6 +1588,7 @@
           artist: "David Production",
           cover: "JJBA9.jpeg",
           audioPath: "JJBA5.2.mp3",
+          videoBgSrc: ".mp4",
           duration: "15:50",
           type: "normal",
           category: "anime",
@@ -1517,6 +1598,7 @@
           artist: "David Production",
           cover: "JJBA10.jpeg",
           audioPath: "JJBA6.mp3",
+          videoBgSrc: ".mp4",
           duration: "15:50",
           type: "normal",
           category: "anime",
@@ -1526,6 +1608,7 @@
           artist: "David Production",
           cover: "JJBA11.jpeg",
           audioPath: "JJBA6.2.mp3",
+          videoBgSrc: ".mp4",
           duration: "15:50",
           type: "normal",
           category: "anime",
@@ -1535,6 +1618,7 @@
           artist: "DMC",
           cover: "Bury The Light.jpg",
           audioPath: "Bury the Light.mp3",
+          videoBgSrc: "NATURAL - Devil May Cry 5 [Vergil - GMV].mp4",
           duration: "5:37",
           type: "normal",
           category: "anime",
@@ -1544,6 +1628,7 @@
           artist: "DMC",
           cover: "Bury The Light.jpg",
           audioPath: "Bury the Light - Ver Women.mp3",
+          videoBgSrc: ".mp4",
           duration: "0:23",
           type: "normal",
           category: "anime",
@@ -1553,6 +1638,7 @@
           artist: "DMC",
           cover: "Bury The Light.jpg",
           audioPath: "DMC 3 Lullaby - Ver Women.mp3",
+          videoBgSrc: ".mp4",
           duration: "5:37",
           type: "normal",
           category: "anime",
@@ -1562,6 +1648,7 @@
           artist: "DMC",
           cover: "Bury The Light.jpg",
           audioPath: "DMC 3 Lullaby - Ver Man.mp3",
+          videoBgSrc: ".mp4",
           duration: "5:37",
           type: "normal",
           category: "anime",
@@ -1571,6 +1658,7 @@
           artist: "Evanescence",
           cover: "jpg",
           audioPath: "AfterLife.mp3",
+          videoBgSrc: ".mp4",
           duration: "5:37",
           type: "normal",
           category: "anime",
@@ -1580,6 +1668,7 @@
           artist: "Sukima Switch",
           cover: "PocariSweet.png",
           audioPath: "PocariSweet.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1589,6 +1678,7 @@
           artist: "Tencent",
           cover: "DragonRaja.jpg",
           audioPath: "DragonRaja.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1598,6 +1688,7 @@
           artist: "Eve",
           cover: "Gokurakugai2.jpg",
           audioPath: "Outsider.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1608,6 +1699,7 @@
           cover: "INCOSMOS.jpg",
           audioPath:
             "EP_ If I Can Stop One Heart From Breaking  Honkai_ Star Rail.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1617,6 +1709,17 @@
           artist: "Hoyo",
           cover: "INHEART.jpg",
           audioPath: "HOYOCOSMOS.mp3",
+          videoBgSrc: ".mp4",
+          duration: "3:28",
+          type: "normal",
+          category: "anime",
+        },
+        {
+          title: "リテラチュア",
+          artist: "Hoyo",
+          cover: ".jpg",
+          audioPath: "リテラチュア.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1629,6 +1732,7 @@
           cover: "ICHIGO.png",
           audioPath:
             "Kamen Rider_ Climax Heroes Fourze OST_ Climax Time! Kamen Rider (Let's Go Rider Kick!).mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1639,6 +1743,7 @@
           cover: "AMAZON.png",
           audioPath:
             "Kamen Rider_ Climax Heroes Fourze OST_ Climax Time! Kamen Rider Amazon (Amazon Rider Koko Ni Ari).mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1649,6 +1754,7 @@
           cover: "BLACK.png",
           audioPath:
             "Kamen Rider_ Climax Heroes Fourze OST_ Climax Time! Kamen Rider Black (Black OP theme).mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1659,6 +1765,7 @@
           cover: "BLACKRX.jpg",
           audioPath:
             "Kamen Rider Climax Heroes Fourze OST_ Climax Time! Kamen Rider Black RX (Black RX OP).mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1668,6 +1775,7 @@
           artist: "Tsuburaya",
           cover: "???.png",
           audioPath: "Ultraman Medley Old Vocal.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1677,6 +1785,7 @@
           artist: "Tsuburaya",
           cover: "???.png",
           audioPath: "Ultraman Medley Modern vocal.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1687,6 +1796,7 @@
           cover: "MEDLEY.jpeg",
           audioPath:
             "[MMD CUP 7] Ultraman's 45 year history. ULTRAMAN SERIES 45th YEAR ANNIVERSARY! [ MikuMikuDance ].mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1697,6 +1807,7 @@
           cover: "MEDLEY.jpeg",
           audioPath:
             "[MMD CUP 18] Ultraman's 50 year history. ULTRAMAN SERIES 50th YEAR ANNIVERSARY! [ MikuMikuDance ].mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1706,6 +1817,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman.jpg",
           audioPath: "Ultraman.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1715,6 +1827,7 @@
           artist: "Tsuburaya",
           cover: "Zoffy.jpg",
           audioPath: "Zoffy.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1724,6 +1837,7 @@
           artist: "Tsuburaya",
           cover: "UltraSeven.jpg",
           audioPath: "UltraSeven.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1733,6 +1847,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Jack.jpg",
           audioPath: "Ultraman jack.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1742,6 +1857,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Ace.jpg",
           audioPath: "Ultraman Ace.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1751,6 +1867,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Taro.jpg",
           audioPath: "Ultraman Taro.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1760,6 +1877,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Taro.jpg",
           audioPath: "ultraman taro (slowed + reverb).mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -1769,6 +1887,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Leo.jpg",
           audioPath: "Ultraman Leo.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1778,6 +1897,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Leo.jpg",
           audioPath: "ultraman leo (slowed + reverb)mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -1787,6 +1907,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Leo2.jpg",
           audioPath: "Ultraman Leo2.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1796,6 +1917,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Leo.jpg",
           audioPath: "LeoMetal.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1805,6 +1927,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Leo.jpg",
           audioPath: "LeoMetalSlow.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1814,6 +1937,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Joneus.jpg",
           audioPath: "Ultraman Joneus.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1823,6 +1947,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Joneus.jpg",
           audioPath: "ultraman joneus theme (slowed + reverb).mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -1832,6 +1957,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman 80.jpg",
           audioPath: "Ultraman 80.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1841,6 +1967,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman 80.jpg",
           audioPath: "ultraman 80 theme (slowed + reverb).mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -1850,6 +1977,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman USA.jpg",
           audioPath: "Ultraman USA.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1859,6 +1987,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Great.jpg",
           audioPath: "Ultraman Great.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1868,6 +1997,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Powered.jpg",
           audioPath: "Ultraman Powered.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1877,6 +2007,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Nice.jpg",
           audioPath: "Ultraman Nice3.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1886,6 +2017,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Neos.jpg",
           audioPath: "Ultraman Neos.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1895,6 +2027,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Zearth.jpg",
           audioPath: "Ultraman Zearth.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1904,6 +2037,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Tiga2.png ",
           audioPath: "Ultraman Tiga China.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1913,6 +2047,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Tiga3.jpg",
           audioPath: "Ultraman Tiga China Slowed.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -1922,6 +2057,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Tiga1.png",
           audioPath: "Tiga HeartBeat.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1931,6 +2067,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Tiga.jpg",
           audioPath: "Ultraman Tiga1.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1940,6 +2077,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Tiga7.jpg",
           audioPath: "Ultraman Tiga Slowed.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -1949,6 +2087,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Tiga6.jpg",
           audioPath: "Ultraman Tiga Slowed2.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -1958,6 +2097,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Tiga5.jpg",
           audioPath: "Ultraman Tiga2.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1967,6 +2107,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Tiga4.jpg",
           audioPath: "Ultraman Tiga ED.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1976,6 +2117,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Dyna.jpg",
           audioPath: "Ultraman Dyna.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -1985,6 +2127,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Dyna2.jpg",
           audioPath: "ultraman dyna theme (slowed + reverb).mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -1994,6 +2137,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Dyna2.jpg",
           audioPath: "Ultraman Dyna.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -2003,6 +2147,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Dyna4.jpg",
           audioPath: "Ultraman Dyna ED1.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2012,6 +2157,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Dyna5.jpg",
           audioPath: "Ultraman Dyna ED Women.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2021,6 +2167,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Saga.jpg",
           audioPath: "Ultraman Dyna ED Saga.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2030,6 +2177,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Dyna3.jpg",
           audioPath: "Ultraman Dyna ED2.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2039,6 +2187,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Gaia.jpg",
           audioPath: "Gaia OP1.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2048,6 +2197,7 @@
           artist: "Tsuburaya",
           cover: "Gaia1.jpg",
           audioPath: "Gaia OP Slow.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -2057,6 +2207,7 @@
           artist: "Tsuburaya",
           cover: "Gaia8.jpg",
           audioPath: "Gaia OP Speed.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "speedup",
           category: "tokusatsu",
@@ -2066,6 +2217,7 @@
           artist: "Tsuburaya",
           cover: "Gaia2.jpg",
           audioPath: "Gaia ED1.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2075,6 +2227,7 @@
           artist: "Tsuburaya",
           cover: "Gaia4.png",
           audioPath: "Gaia ED Slow.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -2084,6 +2237,7 @@
           artist: "Tsuburaya",
           cover: "Gaia3.jpg",
           audioPath: "Gaia ED Speed.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "speedup",
           category: "tokusatsu",
@@ -2093,6 +2247,7 @@
           artist: "Tsuburaya",
           cover: "Gaia6.jpg",
           audioPath: "Gaia ED2.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2102,6 +2257,7 @@
           artist: "Tsuburaya",
           cover: "Gaia5.jpg",
           audioPath: "Gaia ED2 Slow.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -2111,6 +2267,7 @@
           artist: "Tsuburaya",
           cover: "Gaia7.jpg",
           audioPath: "Gaia ED2 Speed.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "speedup",
           category: "tokusatsu",
@@ -2120,6 +2277,7 @@
           artist: "Tsuburaya",
           cover: "Agul.jpg",
           audioPath: "Blue Wolf.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2129,6 +2287,7 @@
           artist: "Tsuburaya",
           cover: "Agul2.jpg",
           audioPath: "Blue WolfS.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "speedup",
           category: "tokusatsu",
@@ -2138,6 +2297,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Cosmos.jpg",
           audioPath: "Cosmos OP.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2147,6 +2307,7 @@
           artist: "Tsuburaya",
           cover: "Cosmos1.jpg",
           audioPath: "Cosmos OP Slow.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -2156,6 +2317,7 @@
           artist: "Tsuburaya",
           cover: "Cosmos2.jpg",
           audioPath: "Cosmos OP Speed.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "speedup",
           category: "tokusatsu",
@@ -2165,6 +2327,7 @@
           artist: "Tsuburaya",
           cover: "Cosmos3.jpg",
           audioPath: "Cosmos ED.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2174,6 +2337,7 @@
           artist: "Tsuburaya",
           cover: "Cosmos4.jpg",
           audioPath: "Cosmos ED Slow.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -2183,6 +2347,7 @@
           artist: "Tsuburaya",
           cover: "Cosmos5.jpg",
           audioPath: "Cosmos ED Speed.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "speedup",
           category: "tokusatsu",
@@ -2192,6 +2357,7 @@
           artist: "Tsuburaya",
           cover: "Cosmos6.jpg",
           audioPath: "Cosmos ED2.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2201,6 +2367,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Justice.jpg",
           audioPath: "Cosmos ED2 Speed.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "speedup",
           category: "tokusatsu",
@@ -2210,6 +2377,7 @@
           artist: "Tsuburaya",
           cover: "UltraSeven X.jpg",
           audioPath: "UltraSeven X.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2219,6 +2387,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Nexus.jpg",
           audioPath: "Nexus OP.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2228,6 +2397,7 @@
           artist: "Tsuburaya",
           cover: "Nexus1.jpg",
           audioPath: "Nexus OP Slow.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -2237,6 +2407,7 @@
           artist: "Tsuburaya",
           cover: "Nexus8.jpg",
           audioPath: "Nexus OP Speed.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "speedup",
           category: "tokusatsu",
@@ -2246,6 +2417,7 @@
           artist: "Tsuburaya",
           cover: "Nexus3.jpg",
           audioPath: "Nexus OP2.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2255,6 +2427,7 @@
           artist: "Tsuburaya",
           cover: "Nexus12.jpg",
           audioPath: "Nexus OP2 Slow.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -2264,6 +2437,7 @@
           artist: "Tsuburaya",
           cover: "Nexus7.jpg",
           audioPath: "Nexus ED.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2273,6 +2447,7 @@
           artist: "Tsuburaya",
           cover: "Nexus11.jpg",
           audioPath: "Nexus ED Speed.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "speedup",
           category: "tokusatsu",
@@ -2282,6 +2457,7 @@
           artist: "Tsuburaya",
           cover: "Nexus10.jpg",
           audioPath: "Nexus ED2.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2291,6 +2467,7 @@
           artist: "Tsuburaya",
           cover: "Nexus4.jpg",
           audioPath: "Nexus ED3.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2300,6 +2477,7 @@
           artist: "Tsuburaya",
           cover: "Nexus5.jpg",
           audioPath: "Noa OP.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2309,6 +2487,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Max.jpg",
           audioPath: "Max OP.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2318,6 +2497,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Max.jpg",
           audioPath: "Max OP Female.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2327,6 +2507,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Mebius.jpg",
           audioPath: "Mebius OP.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2336,6 +2517,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Mebius.jpg",
           audioPath: "Mebius OP Slow.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -2345,6 +2527,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Mebius.jpg",
           audioPath: "Mebius OP Slow2.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -2354,6 +2537,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Mebius.jpg",
           audioPath: "Mebius OP Speed.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "speedup",
           category: "tokusatsu",
@@ -2363,6 +2547,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Hikari.jpg",
           audioPath: "Hikari Op.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2372,6 +2557,7 @@
           artist: "Tsuburaya",
           cover: "Ultraman Hikari.jpg",
           audioPath: "Hikari OP Slow.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -2381,6 +2567,7 @@
           artist: "Tsuburaya",
           cover: "Zero2.jpg",
           audioPath: "Zero OP.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2390,6 +2577,7 @@
           artist: "Tsuburaya",
           cover: "Zero4.jpg",
           audioPath: "Zero OP Slow.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "slowed",
           category: "tokusatsu",
@@ -2399,6 +2587,7 @@
           artist: "Tsuburaya",
           cover: "Zero1.jpg",
           audioPath: "Zero OP Speed.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "speedup",
           category: "tokusatsu",
@@ -2408,6 +2597,7 @@
           artist: "Tsuburaya",
           cover: "Zero3.jpg",
           audioPath: "Zero ED.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2417,6 +2607,7 @@
           artist: "Tsuburaya",
           cover: "Zero5.jpg",
           audioPath: "Zero ED Speed.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "speedup",
           category: "tokusatsu",
@@ -2426,6 +2617,7 @@
           artist: "Tsuburaya",
           cover: ".jpg",
           audioPath: "Ginga No Uta (Ultraman ginga Opening) Lyrics.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2436,6 +2628,7 @@
           cover: ".jpg",
           audioPath:
             "Ultraman Ginga Op Song 2 [Legend of Galaxy - Takamiy ft Mamoru Miyano] Lirik Dan Terjemahan.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2446,6 +2639,7 @@
           cover: ".jpg",
           audioPath:
             "Starlight_Ending Ultraman Ginga_Lirik Bahasa Indonesia.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2455,6 +2649,7 @@
           artist: "Tsuburaya",
           cover: ".jpg",
           audioPath: "Eiyuu No Uta (Ultraman Ginga S Opening) Lyrics.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2465,6 +2660,7 @@
           cover: ".jpg",
           audioPath:
             "Kirameku Mirai - Yume no Ginga e (Ultraman Ginga S Ending) Lyrics.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2474,6 +2670,7 @@
           artist: "Tsuburaya",
           cover: ".jpg",
           audioPath: "Urutoraman X (Ultraman X Opening) Lyrics.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2483,6 +2680,7 @@
           artist: "Tsuburaya",
           cover: ".jpg",
           audioPath: ".mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2492,6 +2690,7 @@
           artist: "Tsuburaya",
           cover: ".jpg",
           audioPath: ".mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "tokusatsu",
@@ -2504,6 +2703,7 @@
           artist: "Running Man",
           cover: "RUNNING MAN.jpg",
           audioPath: "running Man Animation Theme song [English Version].mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "international",
@@ -2513,6 +2713,7 @@
           artist: "ABBA",
           cover: "TWITA.png",
           audioPath: "TWITA.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "international",
@@ -2522,6 +2723,7 @@
           artist: "Queen",
           cover: "KILLER QUEEN.jpg",
           audioPath: "Killer Queen Normal.mp3",
+          videoBgSrc: ".mp4",
           duration: "4:25",
           type: "normal",
           category: "international",
@@ -2531,6 +2733,7 @@
           artist: "Queen",
           cover: "KILLER QUEEN.jpg",
           audioPath: "Killer Queen Speed Up.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:00",
           type: "speedup",
           category: "international",
@@ -2540,6 +2743,7 @@
           artist: "Queen",
           cover: "KILLER QUEEN.jpg",
           audioPath: "Killer Queen Slowed.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:39",
           type: "slowed",
           category: "international",
@@ -2549,6 +2753,7 @@
           artist: "Elvis Presley",
           cover: "THE WONDER OF YOU.jpg",
           audioPath: "THE WONDER OF YOU NORMAL.mp3",
+          videoBgSrc: ".mp4",
           duration: "2:29",
           type: "normal",
           category: "international",
@@ -2558,6 +2763,7 @@
           artist: "Elvis Presley",
           cover: "THE WONDER OF YOU.jpg",
           audioPath: "THE WONDER OF YOU SLOWED REVERB.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:12",
           type: "slowed",
           category: "international",
@@ -2567,6 +2773,7 @@
           artist: "???",
           cover: "Act a Fool.png",
           audioPath: "Act a Fool.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "international",
@@ -2576,6 +2783,7 @@
           artist: "Jordin Sparks",
           cover: "Battlfield.png",
           audioPath: "32 - Battlefield.mp3",
+          videoBgSrc: ".mp4",
           duration: "7:49",
           type: "normal",
           category: "international",
@@ -2588,6 +2796,7 @@
           cover: "MSM.png",
           audioPath:
             "ytmp3free.cc_salah-kah-kita-speed-up-14-youtubemp3free.org.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:12",
           type: "slowed",
           category: "local",
@@ -2598,6 +2807,7 @@
           cover: "MSM.png",
           audioPath:
             "ytmp3free.cc_mencintaimu-sampai-mati-utopia-speed-up-youtubemp3free.org.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:12",
           type: "slowed",
           category: "local",
@@ -2607,6 +2817,7 @@
           artist: "Irwansyah",
           cover: "TP.png",
           audioPath: "Tentang Perasaanku.mp3",
+          videoBgSrc: ".mp4",
           duration: "3:12",
           type: "slowed",
           category: "local",
@@ -2616,10 +2827,12 @@
           artist: "Irwansyah",
           cover: "PW.png",
           audioPath: "pencinta wanita - Irwansyah (speed up).mp3",
+          videoBgSrc: ".mp4",
           duration: "3:12",
           type: "slowed",
           category: "local",
         },
+        // ... (data lagu lainnya tetap sama)
       ];
 
       // Mengambil elemen DOM
@@ -2643,6 +2856,10 @@
       const filterButtons = document.querySelectorAll(".filter-btn");
       const categoryButtons = document.querySelectorAll(".category-btn");
       const songCounter = document.getElementById("song-counter");
+      const backgroundVideoContainer = document.querySelector(
+        ".video-background-container"
+      );
+      const backgroundVideo = document.getElementById("backgroundVideo");
 
       // Elemen audio
       const audio = new Audio();
@@ -2667,6 +2884,8 @@
       let currentCategory = "all";
       let currentSearchTerm = "";
       let filteredSongs = [...songs];
+      let isHoveringSongList = false;
+      let hoverTimeout;
 
       // Setup audio visualization
       function setupAudioVisualization() {
@@ -2709,6 +2928,32 @@
         }
 
         animationId = requestAnimationFrame(updateVisualization);
+      }
+
+      // Update background video - PERBAIKAN UTAMA
+      function updateBackgroundVideo(song, isPreview = false) {
+        // Hanya update video jika lagu benar-benar diputar (diklik)
+        if (!isPreview) {
+          if (song.videoBgSrc && song.videoBgSrc !== ".mp4") {
+            backgroundVideo.src = song.videoBgSrc;
+            backgroundVideo.load();
+            backgroundVideoContainer.classList.add("active");
+
+            // Video akan diputar atau di-pause sesuai dengan status musik
+            if (isPlaying) {
+              backgroundVideo.play().catch((e) => {
+                console.error("Error playing background video:", e);
+                backgroundVideoContainer.classList.remove("active");
+              });
+            } else {
+              backgroundVideo.pause();
+            }
+          } else {
+            backgroundVideoContainer.classList.remove("active");
+            backgroundVideo.src = "";
+            backgroundVideo.load();
+          }
+        }
       }
 
       // Mengisi daftar lagu
@@ -2823,12 +3068,21 @@
         currentTimeEl.textContent = formatTime(currentTime);
       }
 
-      // Set progress bar ketika diklik
+      // Set progress bar ketika diklik - PERBAIKAN UTAMA
       function setProgress(e) {
         const width = this.clientWidth;
         const clickX = e.offsetX;
         const duration = audio.duration;
-        audio.currentTime = (clickX / width) * duration;
+
+        if (isNaN(duration)) return;
+
+        const newTime = (clickX / width) * duration;
+        audio.currentTime = newTime;
+
+        // PERBAIKAN: Video background juga ikut lompat ke waktu yang sama
+        if (backgroundVideo.src && backgroundVideo.duration) {
+          backgroundVideo.currentTime = newTime;
+        }
       }
 
       // Muat lagu
@@ -2840,6 +3094,9 @@
         artistName.textContent = song.artist;
         albumCover.src = song.cover;
         audio.src = song.audioPath;
+
+        // Update background video - HANYA ketika lagu dimuat (diklik)
+        updateBackgroundVideo(song);
 
         // Set durasi default dari metadata lagu
         durationEl.textContent = song.duration;
@@ -2866,6 +3123,15 @@
         // Start visualization
         updateVisualization();
 
+        // Putar video background jika ada
+        if (backgroundVideo.src) {
+          // PERBAIKAN: Pastikan video mulai dari waktu yang sama dengan audio
+          backgroundVideo.currentTime = audio.currentTime;
+          backgroundVideo.play().catch((e) => {
+            console.error("Error playing background video:", e);
+          });
+        }
+
         audio
           .play()
           .then(() => {
@@ -2889,6 +3155,11 @@
 
         // Stop visualization
         cancelAnimationFrame(animationId);
+
+        // Pause video background
+        if (backgroundVideo.src) {
+          backgroundVideo.pause();
+        }
 
         audio.pause();
       }
@@ -2969,6 +3240,10 @@
       function prevSong() {
         if (audio.currentTime > 3) {
           audio.currentTime = 0;
+          // PERBAIKAN: Video juga reset ke awal
+          if (backgroundVideo.src) {
+            backgroundVideo.currentTime = 0;
+          }
           return;
         }
 
@@ -3153,6 +3428,10 @@
           nextSong();
         } else {
           audio.currentTime = 0;
+          // PERBAIKAN: Video juga reset ke awal
+          if (backgroundVideo.src) {
+            backgroundVideo.currentTime = 0;
+          }
           audio.play();
         }
       });
@@ -3160,7 +3439,7 @@
       // Update progress bar
       audio.addEventListener("timeupdate", updateProgress);
 
-      // Klik pada progress bar
+      // Klik pada progress bar - PERBAIKAN UTAMA
       progressContainer.addEventListener("click", setProgress);
 
       // Ketika metadata audio dimuat (untuk mendapatkan durasi)
@@ -3220,9 +3499,17 @@
             break;
           case "ArrowRight":
             audio.currentTime += 5;
+            // PERBAIKAN: Video juga maju 5 detik
+            if (backgroundVideo.src) {
+              backgroundVideo.currentTime += 5;
+            }
             break;
           case "ArrowLeft":
             audio.currentTime -= 5;
+            // PERBAIKAN: Video juga mundur 5 detik
+            if (backgroundVideo.src) {
+              backgroundVideo.currentTime -= 5;
+            }
             break;
           case "ArrowUp":
             audio.volume = Math.min(audio.volume + 0.1, 1);
