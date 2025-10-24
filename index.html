@@ -17,6 +17,7 @@
       rel="stylesheet"
     />
     <style>
+      /* CSS yang sudah ada tetap sama */
       :root {
         --primary-color: #6c5ce7;
         --secondary-color: #a29bfe;
@@ -1238,7 +1239,7 @@
           artist: "-",
           cover: "Saint Seiya (1).png",
           audioPath: "Saint Seiya Opening [4K 60FPS Remastered].mp3",
-          videoBgSrc: "Saint Seiya Opening [4K 60FPS Remastered].mp4",
+          videoBgSrc: "Rurouni Kenshin - Opening 1 _ 4K 60FPS Creditless.mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -2898,6 +2899,7 @@
           type: "slowed",
           category: "local",
         },
+        // ... (data lagu lainnya tetap sama)
       ];
 
       // Mengambil elemen DOM
@@ -2949,27 +2951,33 @@
       let currentCategory = "all";
       let currentSearchTerm = "";
       let filteredSongs = [...songs];
+      let isHoveringSongList = false;
+      let hoverTimeout;
       let videoSyncInterval;
+      let lastVideoSyncTime = 0;
 
-      // PERBAIKAN: Fungsi untuk sinkronisasi video dengan audio
+      // PERBAIKAN UTAMA: Fungsi untuk sinkronisasi video dengan audio
       function syncVideoWithAudio() {
-        if (!backgroundVideo.src || !isPlaying || backgroundVideo.paused)
-          return;
+        if (!backgroundVideo.src || !isPlaying) return;
 
-        const audioTime = audio.currentTime;
-        const videoTime = backgroundVideo.currentTime;
+        // Sinkronkan video dengan audio setiap 500ms
+        const currentAudioTime = audio.currentTime;
+        const currentVideoTime = backgroundVideo.currentTime;
 
-        // Hanya sinkronkan jika perbedaan signifikan (> 0.5 detik)
-        if (Math.abs(audioTime - videoTime) > 0.5) {
-          try {
-            backgroundVideo.currentTime = audioTime;
-          } catch (e) {
-            console.log("Sync error:", e);
-          }
+        // Jika perbedaan waktu lebih dari 0.5 detik, sinkronkan
+        if (Math.abs(currentAudioTime - currentVideoTime) > 0.5) {
+          backgroundVideo.currentTime = currentAudioTime;
+        }
+
+        // Cek apakah video masih berjalan, jika tidak, coba putar ulang
+        if (backgroundVideo.paused && isPlaying) {
+          backgroundVideo.play().catch((e) => {
+            console.log("Video paused, attempting to restart:", e);
+          });
         }
       }
 
-      // PERBAIKAN: Event listener untuk visibility change
+      // PERBAIKAN UTAMA: Event listener untuk visibility change
       document.addEventListener("visibilitychange", function () {
         if (document.hidden) {
           // Tab tidak aktif - hentikan sinkronisasi untuk menghemat sumber daya
@@ -2989,33 +2997,47 @@
         }
       });
 
+      // PERBAIKAN: Event listener untuk page focus/blur
+      window.addEventListener("focus", function () {
+        if (isPlaying && backgroundVideo.src) {
+          // Tab aktif kembali, sinkronkan video
+          backgroundVideo.currentTime = audio.currentTime;
+          backgroundVideo.play().catch((e) => {
+            console.log("Error resuming video on focus:", e);
+          });
+
+          // Mulai sinkronisasi interval
+          videoSyncInterval = setInterval(syncVideoWithAudio, 500);
+        }
+      });
+
+      window.addEventListener("blur", function () {
+        // Hentikan sinkronisasi saat tab tidak aktif
+        clearInterval(videoSyncInterval);
+      });
+
       // Setup audio visualization
       function setupAudioVisualization() {
-        try {
-          // Create audio context
-          audioContext = new (window.AudioContext ||
-            window.webkitAudioContext)();
-          analyser = audioContext.createAnalyser();
-          source = audioContext.createMediaElementSource(audio);
-          source.connect(analyser);
-          analyser.connect(audioContext.destination);
+        // Create audio context
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        source = audioContext.createMediaElementSource(audio);
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
 
-          analyser.fftSize = 256;
-          bufferLength = analyser.frequencyBinCount;
-          dataArray = new Uint8Array(bufferLength);
+        analyser.fftSize = 256;
+        bufferLength = analyser.frequencyBinCount;
+        dataArray = new Uint8Array(bufferLength);
 
-          // Create visualization bars
-          visualization.innerHTML = "";
-          const barCount = Math.floor(visualization.clientWidth / 12);
+        // Create visualization bars
+        visualization.innerHTML = "";
+        const barCount = Math.floor(visualization.clientWidth / 12);
 
-          for (let i = 0; i < barCount; i++) {
-            const bar = document.createElement("div");
-            bar.classList.add("bar");
-            bar.style.height = "5px";
-            visualization.appendChild(bar);
-          }
-        } catch (error) {
-          console.error("Error setting up audio visualization:", error);
+        for (let i = 0; i < barCount; i++) {
+          const bar = document.createElement("div");
+          bar.classList.add("bar");
+          bar.style.height = "5px";
+          visualization.appendChild(bar);
         }
       }
 
@@ -3023,56 +3045,52 @@
       function updateVisualization() {
         if (!analyser || !isPlaying) return;
 
-        try {
-          analyser.getByteFrequencyData(dataArray);
+        analyser.getByteFrequencyData(dataArray);
 
-          const bars = document.querySelectorAll(".bar");
-          const barCount = bars.length;
+        const bars = document.querySelectorAll(".bar");
+        const barCount = bars.length;
 
-          for (let i = 0; i < barCount; i++) {
-            const value = dataArray[i % bufferLength];
-            const height = Math.max(5, (value / 255) * 100);
-            bars[i].style.height = `${height}%`;
-          }
-
-          animationId = requestAnimationFrame(updateVisualization);
-        } catch (error) {
-          console.error("Error updating visualization:", error);
-          cancelAnimationFrame(animationId);
+        for (let i = 0; i < barCount; i++) {
+          const value = dataArray[i % bufferLength];
+          const height = Math.max(5, (value / 255) * 100);
+          bars[i].style.height = `${height}%`;
         }
+
+        animationId = requestAnimationFrame(updateVisualization);
       }
 
-      // PERBAIKAN: Update background video
+      // Update background video - PERBAIKAN UTAMA
       function updateBackgroundVideo(song, isPreview = false) {
-        // Hentikan video sebelumnya
-        backgroundVideo.pause();
-        clearInterval(videoSyncInterval);
-
-        if (song.videoBgSrc && song.videoBgSrc !== ".mp4" && !isPreview) {
-          backgroundVideo.src = song.videoBgSrc;
-
-          backgroundVideo.onloadeddata = function () {
+        // Hanya update video jika lagu benar-benar diputar (diklik)
+        if (!isPreview) {
+          if (song.videoBgSrc && song.videoBgSrc !== ".mp4") {
+            backgroundVideo.src = song.videoBgSrc;
+            backgroundVideo.load();
             backgroundVideoContainer.classList.add("active");
 
-            if (isPlaying) {
-              backgroundVideo.currentTime = audio.currentTime;
-              backgroundVideo.play().catch((e) => {
-                console.log("Video play failed, continuing without video");
-                backgroundVideoContainer.classList.remove("active");
-              });
+            // PERBAIKAN: Tunggu video siap sebelum diputar
+            backgroundVideo.addEventListener(
+              "loadedmetadata",
+              function () {
+                if (isPlaying) {
+                  backgroundVideo.currentTime = audio.currentTime;
+                  backgroundVideo.play().catch((e) => {
+                    console.error("Error playing background video:", e);
+                    backgroundVideoContainer.classList.remove("active");
+                  });
 
-              // Mulai sinkronisasi
-              videoSyncInterval = setInterval(syncVideoWithAudio, 500);
-            }
-          };
-
-          backgroundVideo.onerror = function () {
-            console.log("Video load error, hiding video background");
+                  // Mulai sinkronisasi interval
+                  videoSyncInterval = setInterval(syncVideoWithAudio, 500);
+                }
+              },
+              { once: true }
+            );
+          } else {
             backgroundVideoContainer.classList.remove("active");
-          };
-        } else {
-          backgroundVideoContainer.classList.remove("active");
-          backgroundVideo.src = "";
+            backgroundVideo.src = "";
+            backgroundVideo.load();
+            clearInterval(videoSyncInterval);
+          }
         }
       }
 
@@ -3080,100 +3098,92 @@
       function populateSongList() {
         songList.innerHTML = "";
 
-        try {
-          // Filter songs based on current filter, category and search term
-          filteredSongs = songs.filter((song) => {
-            const matchesFilter =
-              currentFilter === "all" || song.type === currentFilter;
-            const matchesCategory =
-              currentCategory === "all" || song.category === currentCategory;
-            const matchesSearch =
-              currentSearchTerm === "" ||
-              song.title.toLowerCase().includes(currentSearchTerm) ||
-              (song.artist &&
-                song.artist.toLowerCase().includes(currentSearchTerm));
+        // Filter songs based on current filter, category and search term
+        filteredSongs = songs.filter((song) => {
+          const matchesFilter =
+            currentFilter === "all" || song.type === currentFilter;
+          const matchesCategory =
+            currentCategory === "all" || song.category === currentCategory;
+          const matchesSearch =
+            currentSearchTerm === "" ||
+            song.title.toLowerCase().includes(currentSearchTerm) ||
+            song.artist.toLowerCase().includes(currentSearchTerm);
+          return matchesFilter && matchesCategory && matchesSearch;
+        });
 
-            return matchesFilter && matchesCategory && matchesSearch;
-          });
+        // Update song counter
+        songCounter.textContent = `${filteredSongs.length} lagu`;
 
-          // Update song counter
-          songCounter.textContent = `${filteredSongs.length} lagu`;
+        if (filteredSongs.length === 0) {
+          const emptyMessage = document.createElement("div");
+          emptyMessage.classList.add("text-center", "py-3");
+          emptyMessage.textContent = "Tidak ada lagu yang ditemukan";
+          songList.appendChild(emptyMessage);
+          return;
+        }
 
-          if (filteredSongs.length === 0) {
-            const emptyMessage = document.createElement("div");
-            emptyMessage.classList.add("text-center", "py-3");
-            emptyMessage.textContent = "Tidak ada lagu yang ditemukan";
-            songList.appendChild(emptyMessage);
-            return;
+        filteredSongs.forEach((song, index) => {
+          const originalIndex = songs.findIndex(
+            (s) =>
+              s.title === song.title &&
+              s.artist === song.artist &&
+              s.audioPath === song.audioPath
+          );
+
+          const songItem = document.createElement("div");
+          songItem.classList.add("song-item");
+          if (originalIndex === currentSongIndex) {
+            songItem.classList.add("active");
           }
 
-          filteredSongs.forEach((song, index) => {
-            const originalIndex = songs.findIndex(
+          // Add category indicator
+          let categoryClass = "";
+          if (song.category === "anime") categoryClass = "anime";
+          else if (song.category === "tokusatsu") categoryClass = "tokusatsu";
+          else if (song.category === "international")
+            categoryClass = "international";
+          else if (song.category === "local") categoryClass = "local";
+
+          songItem.innerHTML = `
+                    <div class="song-info">
+                        <div class="title">${song.title} <span class="category-indicator ${categoryClass}"></span></div>
+                        <div class="artist">${song.artist}</div>
+                    </div>
+                    <div class="duration">${song.duration}</div>
+                `;
+
+          songItem.addEventListener("click", () => {
+            if (isChangingSong || isScrolling) return;
+            isChangingSong = true;
+
+            // Find the original index of the clicked song
+            currentSongIndex = songs.findIndex(
               (s) =>
                 s.title === song.title &&
                 s.artist === song.artist &&
                 s.audioPath === song.audioPath
             );
 
-            const songItem = document.createElement("div");
-            songItem.classList.add("song-item");
-            if (originalIndex === currentSongIndex) {
-              songItem.classList.add("active");
-            }
-
-            // Add category indicator
-            let categoryClass = "";
-            if (song.category === "anime") categoryClass = "anime";
-            else if (song.category === "tokusatsu") categoryClass = "tokusatsu";
-            else if (song.category === "international")
-              categoryClass = "international";
-            else if (song.category === "local") categoryClass = "local";
-
-            songItem.innerHTML = `
-                        <div class="song-info">
-                            <div class="title">${song.title} <span class="category-indicator ${categoryClass}"></span></div>
-                            <div class="artist">${song.artist}</div>
-                        </div>
-                        <div class="duration">${song.duration}</div>
-                    `;
-
-            songItem.addEventListener("click", () => {
-              if (isChangingSong || isScrolling) return;
-              isChangingSong = true;
-
-              // Find the original index of the clicked song
-              currentSongIndex = songs.findIndex(
-                (s) =>
-                  s.title === song.title &&
-                  s.artist === song.artist &&
-                  s.audioPath === song.audioPath
-              );
-
-              // Hapus kelas aktif dari semua item
-              document.querySelectorAll(".song-item").forEach((item) => {
-                item.classList.remove("active");
-              });
-
-              // Tambahkan kelas aktif ke item yang diklik
-              songItem.classList.add("active");
-
-              loadSong(songs[currentSongIndex]);
-              playSong();
-              scrollToCurrentSong();
-
-              // Reset flag setelah animasi selesai
-              setTimeout(() => {
-                isChangingSong = false;
-              }, 300);
+            // Hapus kelas aktif dari semua item
+            document.querySelectorAll(".song-item").forEach((item) => {
+              item.classList.remove("active");
             });
 
-            songList.appendChild(songItem);
+            // Tambahkan kelas aktif ke item yang diklik
+            songItem.classList.add("active");
+
+            loadSong(songs[currentSongIndex]);
+            playSong();
+            scrollToCurrentSong();
+
+            // Reset flag setelah animasi selesai
+            setTimeout(() => {
+              isChangingSong = false;
+            }, 300);
           });
-        } catch (error) {
-          console.error("Error populating song list:", error);
-          songList.innerHTML =
-            '<div class="text-center py-3">Error loading songs</div>';
-        }
+
+          songList.appendChild(songItem);
+        });
       }
 
       // Format waktu dari detik ke menit:detik
@@ -3196,7 +3206,7 @@
         currentTimeEl.textContent = formatTime(currentTime);
       }
 
-      // Set progress bar ketika diklik
+      // Set progress bar ketika diklik - PERBAIKAN UTAMA
       function setProgress(e) {
         const width = this.clientWidth;
         const clickX = e.offsetX;
@@ -3207,7 +3217,7 @@
         const newTime = (clickX / width) * duration;
         audio.currentTime = newTime;
 
-        // Video background juga ikut lompat ke waktu yang sama
+        // PERBAIKAN: Video background juga ikut lompat ke waktu yang sama
         if (backgroundVideo.src && backgroundVideo.duration) {
           backgroundVideo.currentTime = newTime;
         }
@@ -3230,46 +3240,49 @@
         durationEl.textContent = song.duration;
       }
 
-      // PERBAIKAN: Putar lagu dengan error handling yang lebih baik
-      async function playSong() {
-        try {
-          isPlaying = true;
-          playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-          playBtn.setAttribute("title", "Jeda");
-          playBtn.classList.add("playing");
-          albumCover.classList.add("playing");
+      // Putar lagu
+      function playSong() {
+        isPlaying = true;
+        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        playBtn.setAttribute("title", "Jeda");
+        playBtn.classList.add("playing");
+        albumCover.classList.add("playing");
 
-          // Resume AudioContext jika suspended
-          if (audioContext && audioContext.state === "suspended") {
-            await audioContext.resume();
-          }
-
-          // Setup visualization jika belum
-          if (!audioContext) {
-            setupAudioVisualization();
-          }
-
-          // Putar audio
-          await audio.play();
-
-          // Start visualization
-          updateVisualization();
-
-          // Handle video background
-          if (backgroundVideo.src) {
-            backgroundVideo.currentTime = audio.currentTime;
-            await backgroundVideo.play().catch((e) => {
-              console.log("Background video play failed");
-            });
-            videoSyncInterval = setInterval(syncVideoWithAudio, 500);
-          }
-
-          showLoadingState(false);
-        } catch (error) {
-          console.error("Play error:", error);
-          showError("Gagal memutar lagu: " + error.message);
-          pauseSong();
+        // Setup audio visualization if not already done
+        if (!audioContext) {
+          setupAudioVisualization();
         }
+
+        // Resume audio context if suspended
+        if (audioContext.state === "suspended") {
+          audioContext.resume();
+        }
+
+        // Start visualization
+        updateVisualization();
+
+        // Putar video background jika ada
+        if (backgroundVideo.src) {
+          // PERBAIKAN: Pastikan video mulai dari waktu yang sama dengan audio
+          backgroundVideo.currentTime = audio.currentTime;
+          backgroundVideo.play().catch((e) => {
+            console.error("Error playing background video:", e);
+          });
+
+          // Mulai sinkronisasi interval
+          videoSyncInterval = setInterval(syncVideoWithAudio, 500);
+        }
+
+        audio
+          .play()
+          .then(() => {
+            showLoadingState(false);
+          })
+          .catch((e) => {
+            console.error("Error playing audio:", e);
+            showError("Gagal memutar lagu. Pastikan file audio tersedia.");
+            pauseSong();
+          });
       }
 
       // Pause lagu
@@ -3371,7 +3384,7 @@
       function prevSong() {
         if (audio.currentTime > 3) {
           audio.currentTime = 0;
-          // Video juga reset ke awal
+          // PERBAIKAN: Video juga reset ke awal
           if (backgroundVideo.src) {
             backgroundVideo.currentTime = 0;
           }
@@ -3539,17 +3552,6 @@
         errorMessage.style.display = "none";
       }
 
-      // PERBAIKAN: Cleanup function
-      function cleanup() {
-        clearInterval(videoSyncInterval);
-        cancelAnimationFrame(animationId);
-        audio.pause();
-        if (backgroundVideo) {
-          backgroundVideo.pause();
-          backgroundVideo.src = "";
-        }
-      }
-
       // Event listeners
       playBtn.addEventListener("click", () => {
         if (isPlaying) {
@@ -3570,7 +3572,7 @@
           nextSong();
         } else {
           audio.currentTime = 0;
-          // Video juga reset ke awal
+          // PERBAIKAN: Video juga reset ke awal
           if (backgroundVideo.src) {
             backgroundVideo.currentTime = 0;
           }
@@ -3581,7 +3583,7 @@
       // Update progress bar
       audio.addEventListener("timeupdate", updateProgress);
 
-      // Klik pada progress bar
+      // Klik pada progress bar - PERBAIKAN UTAMA
       progressContainer.addEventListener("click", setProgress);
 
       // Ketika metadata audio dimuat (untuk mendapatkan durasi)
@@ -3641,14 +3643,14 @@
             break;
           case "ArrowRight":
             audio.currentTime += 5;
-            // Video juga maju 5 detik
+            // PERBAIKAN: Video juga maju 5 detik
             if (backgroundVideo.src) {
               backgroundVideo.currentTime += 5;
             }
             break;
           case "ArrowLeft":
             audio.currentTime -= 5;
-            // Video juga mundur 5 detik
+            // PERBAIKAN: Video juga mundur 5 detik
             if (backgroundVideo.src) {
               backgroundVideo.currentTime -= 5;
             }
@@ -3666,10 +3668,6 @@
             break;
         }
       });
-
-      // Panggil cleanup ketika page unload
-      window.addEventListener("beforeunload", cleanup);
-      window.addEventListener("pagehide", cleanup);
 
       // Inisialisasi
       populateSongList();
