@@ -17,7 +17,6 @@
       rel="stylesheet"
     />
     <style>
-      /* CSS yang sudah ada tetap sama */
       :root {
         --primary-color: #6c5ce7;
         --secondary-color: #a29bfe;
@@ -113,6 +112,23 @@
       }
 
       .video-loading.active {
+        display: block;
+      }
+
+      .video-loop-indicator {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        z-index: 3;
+        display: none;
+      }
+
+      .video-loop-indicator.active {
         display: block;
       }
 
@@ -557,7 +573,7 @@
         width: 120px;
         cursor: pointer;
         appearance: none;
-        -moz-appearance: none; /* for Firefox */
+        -moz-appearance: none;
         height: 6px;
         border-radius: 3px;
         background: rgba(255, 255, 255, 0.1);
@@ -913,7 +929,6 @@
           margin-top: 15px;
         }
 
-        /* Song list improvements */
         .song-list-container {
           margin-top: 25px;
         }
@@ -1117,7 +1132,10 @@
       <div class="video-loading" id="video-loading">
         <i class="fas fa-spinner fa-spin"></i> Loading video...
       </div>
-      <video id="backgroundVideo" autoplay loop muted playsinline></video>
+      <div class="video-loop-indicator" id="video-loop-indicator">
+        <i class="fas fa-redo"></i> Looping
+      </div>
+      <video id="backgroundVideo" autoplay muted playsinline></video>
       <div class="video-overlay"></div>
     </div>
 
@@ -1252,9 +1270,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      // Data lagu dengan video background - DIPERBAIKI
-      // ... (data lagu lainnya, pastikan videoBgSrc valid)
-      // Untuk lagu yang tidak memiliki video, gunakan string kosong ""
+      // Data lagu dengan video background
       const songs = [
         {
           title: "Samurai X - Creditless",
@@ -1271,7 +1287,7 @@
           artist: "-",
           cover: "Saint Seiya (1).png",
           audioPath: "Saint Seiya Opening [4K 60FPS Remastered].mp3",
-          videoBgSrc: "Rurouni Kenshin - Opening 1 _ 4K 60FPS Creditless.mp4",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
@@ -1281,1657 +1297,33 @@
           artist: "-",
           cover: "Saint Seiya (2).png",
           audioPath: "Saint Seiya Opening 2 (Japanese - 4K).mp3",
-          videoBgSrc: "Rurouni Kenshin - Opening 1 _ 4K 60FPS Creditless.mp4",
+          videoBgSrc: ".mp4",
           duration: "3:28",
           type: "normal",
           category: "anime",
         },
         {
-          title: "Saint Seiya - Soldier Dream (Soul Of Gold)",
+          title: "One Punch Man - Opening 1",
           artist: "-",
-          cover: "Saint Seiya (3).png",
-          audioPath:
-            "Saint Seiya_ Soul of Gold Opening Creditless (4K AI Upscaled & Enhanced).mp3",
-          videoBgSrc:
-            "Saint Seiya_ Soul of Gold Opening Creditless (4K AI Upscaled & Enhanced).mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Attack On Titan - Feuerroter pfeil und Bogen",
-          artist: "Linked Horizon",
-          cover: "YEAGER.jpg",
-          audioPath:
-            "Attack on Titan - Opening 1  Feuerroter Pfeil und Bogen.mp3",
-          videoBgSrc: "https://www.youtube.com/watch?v=_W2K7J0iFLo",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Attack On Titan - Jiyuu No Tsubasa",
-          artist: "Linked Horizon",
-          cover: "TSUBASA.jpg",
-          audioPath: "Attack on Titan  Opening 2  Jiyuu no Tsubasa.mp3",
-          videoBgSrc:
-            "Attack on Titan Opening 2 _ Jiyuu no Tsubasa by Linked Horizon.mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Attack On Titan - Shinzou Wo Sasageyo",
-          artist: "Linked Horizon",
-          cover: "SASAGEYO.jpg",
-          audioPath:
-            "Attack on Titan Season 2 - Opening  Shinzou wo Sasageyo!.mp3",
-          videoBgSrc:
-            "Attack on Titan Season 2 - Official Opening Song - Shinzou wo Sasageyo by Linked Horizon.mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Attack On Titan - Red Swan",
-          artist: "Linked Horizon",
-          cover: "RED SWAN.jpg",
-          audioPath:
-            "Attack on Titan  Shingeki no Kyojin Season 3 OP Red Swan YOSHIKI feat. HYDE ᴴᴰ.mp3",
-          videoBgSrc:
-            "_Shingeki no Kyojin Season 3 OP •「Red Swan」 YOSHIKI feat. HYDE ᴴᴰ.mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Attack On Titan - Shoukei to Shikaabane no Michi",
-          artist: "Linked Horizon",
-          cover: "bla bla.jpg",
-          audioPath:
-            "Shingeki no kyojin opening 5 Shoukei to Shikabane no Michi Linked Horizon [1080p].mp3",
-          videoBgSrc:
-            "Shingeki no kyojin opening 5 『Shoukei to Shikabane no Michi』 Linked Horizon [1080p].mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Attack On Titan - lavidas",
-          artist: "Linked Horizon",
-          cover: "LAVIDAS.jpg",
-          audioPath:
-            "TVアニメ進撃の巨人The Final Season Part 1ノンクレジットOP神聖かまってちゃん僕の戦争.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Attack On Titan - Rumbling",
-          artist: "Linked Horizon",
-          cover: "RUMBLING.jpg",
-          audioPath:
-            "TVアニメ進撃の巨人The Final Season Part 2ノンクレジットOP SiMThe Rumbling.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Attack On Titan - Yuugure no Tori ",
-          artist: "Linked Horizon",
-          cover: "YUUGURE.png",
-          audioPath:
-            "Attack on Titan - Ending 3 Yuugure no Tori 4K  UHD Creditless  CC.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Attack On Titan - Akatsuki No Requiem ",
-          artist: "Linked Horizon",
-          cover: "AKATSUKI NO REQUIEM.jpg",
-          audioPath:
-            "Attack on Titan - Ending 4 Akatsuki no Chinkonka 4K  UHD Creditless  CC.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Attack On Titan - Shougeki ",
-          artist: "Linked Horizon",
-          cover: "SHOUGEKI.jpg",
-          audioPath:
-            "Attack on Titan - Ending 6 Shougeki 4K  UHD Creditless  CC.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Attack On Titan - Akuma No Ko ",
-          artist: "Linked Horizon",
-          cover: "AKUMA NO KO.jpg",
-          audioPath:
-            "Attack on Titan - Ending 7 Akuma no Ko 4K  UHD Creditless  CC.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Attack On Titan - Under The Tree",
-          artist: "Linked Horizon",
-          cover: "UNDER THE TREE.jpg",
-          audioPath:
-            "Attack on Titan - The Final Season Part 3 - Special Theme UNDER THE TREE 4K  UHD  CC.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Attack On Titan - Seigo No Kyojin ",
-          artist: "Linked Horizon",
-          cover: "SEIGO.jpg",
-          audioPath:
-            "Attack on Titan - Opening 8 Saigo no Kyojin 4K  UHD Creditless  CC.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Attack On Titan - Itterashai ",
-          artist: "Linked Horizon",
-          cover: "ITTERASHAI.jpg",
-          audioPath:
-            "Attack on Titan - Ending 8 Itterasshai 4K  UHD Creditless  CC.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Jujutus kaisen 0 - Sakayume",
-          artist: "King Gnu",
-          cover: "Sakayume.png",
-          audioPath: "Sakayume.mp3",
-          videoBgSrc: ".mp4",
-          duration: "5:19",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Jujutus kaisen 0 - Sakayume - Slowed",
-          artist: "King Gnu",
-          cover: "SakayumeSlowed.png",
-          audioPath:
-            "sakayume - king gnu __ slowed and reverb-yt.savetube.me.mp3",
-          videoBgSrc: ".mp4",
-          duration: "6:17",
-          type: "slowed",
-          category: "anime",
-        },
-        {
-          title: "Jujutus kaisen 0 - Sakayume - Ver English",
-          artist: "King Gnu",
-          cover: "SakayumeEnglish.png",
-          audioPath: "SakayumeEnglish.mp3",
-          videoBgSrc: ".mp4",
-          duration: "2:23",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Sakamoto Days - Run Sakamoto",
-          artist: "Vaundy",
-          cover: "Sakamoto.jpg",
-          audioPath:
-            "SAKAMOTO DAYS OP _ RUN SAKAMOTO RUN by Vaundy _ Netflix Anime-yt.savetube.me.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Sakamoto Days - Run Sakamoto - Slowed",
-          artist: "Vaundy",
-          cover: "SakamotoSlowed.jpg",
-          audioPath:
-            "Sakamoto days - Opening Full song (Slowed-Reverb)-yt.savetube.me.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "anime",
-        },
-        {
-          title: "One Piece - Memories X Dear Sunrise",
-          artist: "Maki Otsuki",
-          cover: "Memories X Dear Sunrise.png",
-          audioPath: "Memories & Dear Sunrise.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "One Piece - Dear Sunrise",
-          artist: "Maki Otsuki",
-          cover: "Dear Sunrise.png",
-          audioPath: "Dear Sunrise.mp3",
-          videoBgSrc: ".mp4",
-          duration: "5:37",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "One Piece - Dear Sunrise - Slowed",
-          artist: "Maki Otsuki",
-          cover: "Dear Sunrise - Slowed.png",
-          audioPath: "Dear Sunrise - Slowed.mp3",
-          videoBgSrc: ".mp4",
-          duration: "5:37",
-          type: "slowed",
-          category: "anime",
-        },
-        {
-          title: "JJBA OP 1 - 11 - Indonesia Cover",
-          artist: "Vradnyanaz",
-          cover: "JJBA1-5INDONESIA.jpeg",
-          audioPath: "JJBA1-5.mp3",
-          videoBgSrc: ".mp4",
-          duration: "15:50",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Jojo Bizzare Adventure SBR X GOLDEN WIND - OST",
-          artist: "David Production",
-          cover: "jpeg",
-          audioPath:
-            "ytmp3free.cc_johnny-joestar-x-giorno-themejojo-steel-ball-run-trailer-ost-epic-mashup-golden-balls-of-steel-youtubemp3free.org.mp3",
-          videoBgSrc: ".mp4",
-          duration: "15:50",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Jojo Bizzare Adventure OP 1 - 11",
-          artist: "David Production",
-          cover: "JJBA1-6.jpeg",
-          audioPath: "JJBA1-6.mp3",
-          videoBgSrc: ".mp4",
-          duration: "15:50",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Jojo Bizzare Adventure PT.1 OP 1",
-          artist: "David Production",
-          cover: "JJBA1.jpeg",
-          audioPath: "JJBA1.mp3",
-          videoBgSrc: ".mp4",
-          duration: "15:50",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Jojo Bizzare Adventure PT.2 OP 2",
-          artist: "David Production",
-          cover: "JJBA2.jpeg",
-          audioPath: "JJBA2.mp3",
-          videoBgSrc: ".mp4",
-          duration: "15:50",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Jojo Bizzare Adventure PT.3 OP 3",
-          artist: "David Production",
-          cover: "JJBA3.jpeg",
-          audioPath: "JJBA3.mp3",
-          videoBgSrc: ".mp4",
-          duration: "15:50",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Jojo Bizzare Adventure PT.3 OP 4",
-          artist: "David Production",
-          cover: "JJBA4.jpeg",
-          audioPath: "JJBA3.2.mp3",
-          videoBgSrc: ".mp4",
-          duration: "15:50",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Jojo Bizzare Adventure PT.4 OP 5",
-          artist: "David Production",
-          cover: "JJBA5.jpeg",
-          audioPath: "JJBA4.mp3",
-          videoBgSrc: ".mp4",
-          duration: "15:50",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Jojo Bizzare Adventure PT.4 OP 6",
-          artist: "David Production",
-          cover: "JJBA6.jpeg",
-          audioPath: "JJBA4.2.mp3",
-          videoBgSrc: ".mp4",
-          duration: "15:50",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Jojo Bizzare Adventure PT.4 OP 7",
-          artist: "David Production",
-          cover: "JJBA7.jpeg",
-          audioPath: "JJBA4.3.mp3",
-          videoBgSrc: ".mp4",
-          duration: "15:50",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Jojo Bizzare Adventure PT.5 OP 8",
-          artist: "David Production",
-          cover: "JJBA8.jpeg",
-          audioPath: "JJBA5.mp3",
-          videoBgSrc: ".mp4",
-          duration: "15:50",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Jojo Bizzare Adventure PT.5 OP 9",
-          artist: "David Production",
-          cover: "JJBA9.jpeg",
-          audioPath: "JJBA5.2.mp3",
-          videoBgSrc: ".mp4",
-          duration: "15:50",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Jojo Bizzare Adventure PT.6 OP 10",
-          artist: "David Production",
-          cover: "JJBA10.jpeg",
-          audioPath: "JJBA6.mp3",
-          videoBgSrc: ".mp4",
-          duration: "15:50",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Jojo Bizzare Adventure PT.6 OP 11",
-          artist: "David Production",
-          cover: "JJBA11.jpeg",
-          audioPath: "JJBA6.2.mp3",
-          videoBgSrc: ".mp4",
-          duration: "15:50",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "DMC 5 / Netflix - Bury the Light - Original",
-          artist: "DMC",
-          cover: "Bury The Light.jpg",
-          audioPath: "Bury the Light.mp3",
-          videoBgSrc:
-            "DMC5 - Vergil returns, but with “Bury the light deep within”.mp4",
-          duration: "5:37",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "DMC Netflix - Bury the Light - Ver Women",
-          artist: "DMC",
-          cover: "Bury The Light.jpg",
-          audioPath: "Bury the Light - Ver Women.mp3",
-          videoBgSrc: ".mp4",
-          duration: "0:23",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "DMC 3 Lullabys - Ver Women",
-          artist: "DMC",
-          cover: "Bury The Light.jpg",
-          audioPath: "DMC 3 Lullaby - Ver Women.mp3",
-          videoBgSrc: ".mp4",
-          duration: "5:37",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "DMC 3 Lullabys - Ver Man",
-          artist: "DMC",
-          cover: "Bury The Light.jpg",
-          audioPath: "DMC 3 Lullaby - Ver Man.mp3",
-          videoBgSrc: ".mp4",
-          duration: "5:37",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "DMC Netflix - Afterlife",
-          artist: "Evanescence",
-          cover: "jpg",
-          audioPath: "AfterLife.mp3",
-          videoBgSrc: ".mp4",
-          duration: "5:37",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Pocari Sweet - Zenryoku Shounen",
-          artist: "Sukima Switch",
-          cover: "PocariSweet.png",
-          audioPath: "PocariSweet.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Dragon Raja",
-          artist: "Tencent",
-          cover: "DragonRaja.jpg",
-          audioPath: "DragonRaja.mp3",
-          videoBgSrc:
-            "【Dragon Raja】New Class PV Reveal - Performer Joins the Battle! (1080P).mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Gokurakugai - Outsider",
-          artist: "Eve",
-          cover: "Gokurakugai2.jpg",
-          audioPath: "Outsider.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Dandadan Op 1",
-          artist: "Creepy Nuts",
-          cover: "DanDaDan.jpg",
-          audioPath: "DAN DA DAN - Opening  Otonoke by Creepy Nuts.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "Sway To My Beat In Cosmos",
-          artist: "Hoyo",
-          cover: "INCOSMOS.jpg",
-          audioPath:
-            "EP_ If I Can Stop One Heart From Breaking  Honkai_ Star Rail.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "If I Can Stop One Heart for Breaking ",
-          artist: "Hoyo",
-          cover: "INHEART.jpg",
-          audioPath: "HOYOCOSMOS.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-        {
-          title: "リテラチュア",
-          artist: "Hoyo",
-          cover: ".jpg",
-          audioPath: "リテラチュア.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:28",
-          type: "normal",
-          category: "anime",
-        },
-
-        // TOKUSATSU - ULTRAMAN / KAMEN RIDER
-        {
-          title: "Kamen Rider Ichigo - Climax Time Ost",
-          artist: "Bandai",
-          cover: "ICHIGO.png",
-          audioPath:
-            "Kamen Rider_ Climax Heroes Fourze OST_ Climax Time! Kamen Rider (Let's Go Rider Kick!).mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Kamen Rider Amazon - Climax Time Ost",
-          artist: "Bandai",
-          cover: "AMAZON.png",
-          audioPath:
-            "Kamen Rider_ Climax Heroes Fourze OST_ Climax Time! Kamen Rider Amazon (Amazon Rider Koko Ni Ari).mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Kamen Rider Black - Climax Time Ost",
-          artist: "Bandai",
-          cover: "BLACK.png",
-          audioPath:
-            "Kamen Rider_ Climax Heroes Fourze OST_ Climax Time! Kamen Rider Black (Black OP theme).mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Kamen Rider Black RX - Climax Time Ost",
-          artist: "Bandai",
-          cover: "BLACKRX.jpg",
-          audioPath:
-            "Kamen Rider Climax Heroes Fourze OST_ Climax Time! Kamen Rider Black RX (Black RX OP).mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Medley - Old Vocal",
-          artist: "Tsuburaya",
-          cover: "???.png",
-          audioPath: "Ultraman Medley Old Vocal.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Medley - Modern Vocal",
-          artist: "Tsuburaya",
-          cover: "???.png",
-          audioPath: "Ultraman Medley Modern vocal.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman - Ultraman Ginga ( Medley )",
-          artist: "Tsuburaya",
-          cover: "MEDLEY.jpeg",
-          audioPath:
-            "[MMD CUP 7] Ultraman's 45 year history. ULTRAMAN SERIES 45th YEAR ANNIVERSARY! [ MikuMikuDance ].mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman - Ultraman Orb ( Medley )",
-          artist: "Tsuburaya",
-          cover: "MEDLEY.jpeg",
-          audioPath:
-            "[MMD CUP 18] Ultraman's 50 year history. ULTRAMAN SERIES 50th YEAR ANNIVERSARY! [ MikuMikuDance ].mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman.jpg",
-          audioPath: "Ultraman.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Zoffy Opening",
-          artist: "Tsuburaya",
-          cover: "Zoffy.jpg",
-          audioPath: "Zoffy.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "UltraSeven Opening",
-          artist: "Tsuburaya",
-          cover: "UltraSeven.jpg",
-          audioPath: "UltraSeven.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman jack Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman Jack.jpg",
-          audioPath: "Ultraman jack.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Ace Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman Ace.jpg",
-          audioPath: "Ultraman Ace.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Taro Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman Taro.jpg",
-          audioPath: "Ultraman Taro.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Taro Opening - Slowed Reverb",
-          artist: "Tsuburaya",
-          cover: "Ultraman Taro.jpg",
-          audioPath: "ultraman taro (slowed + reverb).mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Leo Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman Leo.jpg",
-          audioPath: "Ultraman Leo.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Leo Opening - Slowed Reverb",
-          artist: "Tsuburaya",
-          cover: "Ultraman Leo.jpg",
-          audioPath: "ultraman leo (slowed + reverb)mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Leo Opening 2",
-          artist: "Tsuburaya",
-          cover: "Ultraman Leo2.jpg",
-          audioPath: "Ultraman Leo2.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Leo Opening - Ver.Metal",
-          artist: "Tsuburaya",
-          cover: "Ultraman Leo.jpg",
-          audioPath: "LeoMetal.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Leo Opening - Ver.Metal - Slowed Reverb",
-          artist: "Tsuburaya",
-          cover: "Ultraman Leo.jpg",
-          audioPath: "LeoMetalSlow.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Joneus Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman Joneus.jpg",
-          audioPath: "Ultraman Joneus.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Joneus Opening - Slowed Reverb",
-          artist: "Tsuburaya",
-          cover: "Ultraman Joneus.jpg",
-          audioPath: "ultraman joneus theme (slowed + reverb).mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman 80 Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman 80.jpg",
-          audioPath: "Ultraman 80.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman 80 Opening - Slowed Reverb",
-          artist: "Tsuburaya",
-          cover: "Ultraman 80.jpg",
-          audioPath: "ultraman 80 theme (slowed + reverb).mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman USA Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman USA.jpg",
-          audioPath: "Ultraman USA.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Great Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman Great.jpg",
-          audioPath: "Ultraman Great.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Powered Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman Powered.jpg",
-          audioPath: "Ultraman Powered.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Nice Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman Nice.jpg",
-          audioPath: "Ultraman Nice3.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Neos Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman Neos.jpg",
-          audioPath: "Ultraman Neos.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Zearth Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman Zearth.jpg",
-          audioPath: "Ultraman Zearth.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Tiga Opening China",
-          artist: "Tsuburaya",
-          cover: "Ultraman Tiga2.png ",
-          audioPath: "Ultraman Tiga China.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Tiga Opening China - Slowed Reverb",
-          artist: "Tsuburaya",
-          cover: "Ultraman Tiga3.jpg",
-          audioPath: "Ultraman Tiga China Slowed.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Tiga HeartBeat - Ost",
-          artist: "Tsuburaya",
-          cover: "Ultraman Tiga1.png",
-          audioPath: "Tiga HeartBeat.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Tiga Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman Tiga.jpg",
-          audioPath: "Ultraman Tiga1.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Tiga Opening - Slowed Reverb",
-          artist: "Tsuburaya",
-          cover: "Ultraman Tiga7.jpg",
-          audioPath: "Ultraman Tiga Slowed.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Tiga Opening - Slowed Reverb ver.2",
-          artist: "Tsuburaya",
-          cover: "Ultraman Tiga6.jpg",
-          audioPath: "Ultraman Tiga Slowed2.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Tiga Opening 2",
-          artist: "Tsuburaya",
-          cover: "Ultraman Tiga5.jpg",
-          audioPath: "Ultraman Tiga2.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Tiga Ending",
-          artist: "Tsuburaya",
-          cover: "Ultraman Tiga4.jpg",
-          audioPath: "Ultraman Tiga ED.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Dyna Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman Dyna.jpg",
-          audioPath: "Ultraman Dyna.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Dyna Opening - Slowed Reverb",
-          artist: "Tsuburaya",
-          cover: "Ultraman Dyna2.jpg",
-          audioPath: "ultraman dyna theme (slowed + reverb).mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Dyna Opening - Slowed Reverb ver.2",
-          artist: "Tsuburaya",
-          cover: "Ultraman Dyna2.jpg",
-          audioPath: "Ultraman Dyna.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Dyna Ending",
-          artist: "Tsuburaya",
-          cover: "Ultraman Dyna4.jpg",
-          audioPath: "Ultraman Dyna ED1.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Dyna Ending - ver. Women",
-          artist: "Tsuburaya",
-          cover: "Ultraman Dyna5.jpg",
-          audioPath: "Ultraman Dyna ED Women.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Dyna Ending - Ver Saga",
-          artist: "Tsuburaya",
-          cover: "Ultraman Saga.jpg",
-          audioPath: "Ultraman Dyna ED Saga.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Dyna Ending 2",
-          artist: "Tsuburaya",
-          cover: "Ultraman Dyna3.jpg",
-          audioPath: "Ultraman Dyna ED2.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Gaia Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman Gaia.jpg",
-          audioPath: "Gaia OP1.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Gaia Opening - Slowed Reverb",
-          artist: "Tsuburaya",
-          cover: "Gaia1.jpg",
-          audioPath: "Gaia OP Slow.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Gaia Opening - Speed Up",
-          artist: "Tsuburaya",
-          cover: "Gaia8.jpg",
-          audioPath: "Gaia OP Speed.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "speedup",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Gaia Ending",
-          artist: "Tsuburaya",
-          cover: "Gaia2.jpg",
-          audioPath: "Gaia ED1.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Gaia Ending - Slowed Reverb",
-          artist: "Tsuburaya",
-          cover: "Gaia4.png",
-          audioPath: "Gaia ED Slow.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Gaia Ending - Speed Up",
-          artist: "Tsuburaya",
-          cover: "Gaia3.jpg",
-          audioPath: "Gaia ED Speed.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "speedup",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Gaia Ending 2",
-          artist: "Tsuburaya",
-          cover: "Gaia6.jpg",
-          audioPath: "Gaia ED2.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Gaia Ending 2 - Slowed Reverb",
-          artist: "Tsuburaya",
-          cover: "Gaia5.jpg",
-          audioPath: "Gaia ED2 Slow.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Gaia Ending 2 - Speed Up",
-          artist: "Tsuburaya",
-          cover: "Gaia7.jpg",
-          audioPath: "Gaia ED2 Speed.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "speedup",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Agul Opening",
-          artist: "Tsuburaya",
-          cover: "Agul.jpg",
-          audioPath: "Blue Wolf.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Agul Opening - Speed Up",
-          artist: "Tsuburaya",
-          cover: "Agul2.jpg",
-          audioPath: "Blue WolfS.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "speedup",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Cosmos Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman Cosmos.jpg",
-          audioPath: "Cosmos OP.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Cosmos Opening - Slowed Reverb",
-          artist: "Tsuburaya",
-          cover: "Cosmos1.jpg",
-          audioPath: "Cosmos OP Slow.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Cosmos Opening - Speed Up",
-          artist: "Tsuburaya",
-          cover: "Cosmos2.jpg",
-          audioPath: "Cosmos OP Speed.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "speedup",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Cosmos Ending",
-          artist: "Tsuburaya",
-          cover: "Cosmos3.jpg",
-          audioPath: "Cosmos ED.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Cosmos Ending - Slowed Reverb",
-          artist: "Tsuburaya",
-          cover: "Cosmos4.jpg",
-          audioPath: "Cosmos ED Slow.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Cosmos Ending - Speed Up",
-          artist: "Tsuburaya",
-          cover: "Cosmos5.jpg",
-          audioPath: "Cosmos ED Speed.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "speedup",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Cosmos Ending 2",
-          artist: "Tsuburaya",
-          cover: "Cosmos6.jpg",
-          audioPath: "Cosmos ED2.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Cosmos Ending 2 - Speed Up",
-          artist: "Tsuburaya",
-          cover: "Ultraman Justice.jpg",
-          audioPath: "Cosmos ED2 Speed.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "speedup",
-          category: "tokusatsu",
-        },
-        {
-          title: "UltraSeven X Opening",
-          artist: "Tsuburaya",
-          cover: "UltraSeven X.jpg",
-          audioPath: "UltraSeven X.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Nexus Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman Nexus.jpg",
-          audioPath: "Nexus OP.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Nexus Opening - Slowed Reverb",
-          artist: "Tsuburaya",
-          cover: "Nexus1.jpg",
-          audioPath: "Nexus OP Slow.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Nexus Opening - Speed Up",
-          artist: "Tsuburaya",
-          cover: "Nexus8.jpg",
-          audioPath: "Nexus OP Speed.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "speedup",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Nexus Opening 2",
-          artist: "Tsuburaya",
-          cover: "Nexus3.jpg",
-          audioPath: "Nexus OP2.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Nexus Opening 2 - Slowed Reverb",
-          artist: "Tsuburaya",
-          cover: "Nexus12.jpg",
-          audioPath: "Nexus OP2 Slow.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Nexus Ending",
-          artist: "Tsuburaya",
-          cover: "Nexus7.jpg",
-          audioPath: "Nexus ED.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Nexus Ending - Speed Up",
-          artist: "Tsuburaya",
-          cover: "Nexus11.jpg",
-          audioPath: "Nexus ED Speed.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "speedup",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Nexus Ending 2",
-          artist: "Tsuburaya",
-          cover: "Nexus10.jpg",
-          audioPath: "Nexus ED2.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Nexus Ending 3",
-          artist: "Tsuburaya",
-          cover: "Nexus4.jpg",
-          audioPath: "Nexus ED3.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Noa (Nexus) Opening",
-          artist: "Tsuburaya",
-          cover: "Nexus5.jpg",
-          audioPath: "Noa OP.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Max Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman Max.jpg",
-          audioPath: "Max OP.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Max Opening - Ver. Female",
-          artist: "Tsuburaya",
-          cover: "Ultraman Max.jpg",
-          audioPath: "Max OP Female.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Mebius Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman Mebius.jpg",
-          audioPath: "Mebius OP.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Mebius Opening - Slowed Reverb",
-          artist: "Tsuburaya",
-          cover: "Ultraman Mebius.jpg",
-          audioPath: "Mebius OP Slow.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Mebius Opening - Slowed Reverb",
-          artist: "Tsuburaya",
-          cover: "Ultraman Mebius.jpg",
-          audioPath: "Mebius OP Slow2.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Mebius Opening - Speed Up",
-          artist: "Tsuburaya",
-          cover: "Ultraman Mebius.jpg",
-          audioPath: "Mebius OP Speed.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "speedup",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Hikari Opening",
-          artist: "Tsuburaya",
-          cover: "Ultraman Hikari.jpg",
-          audioPath: "Hikari Op.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Hikari Opening - Slowed Reverb",
-          artist: "Tsuburaya",
-          cover: "Ultraman Hikari.jpg",
-          audioPath: "Hikari OP Slow.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Zero Opening",
-          artist: "Tsuburaya",
-          cover: "Zero2.jpg",
-          audioPath: "Zero OP.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Zero Opening - Slowed Reverb",
-          artist: "Tsuburaya",
-          cover: "Zero4.jpg",
-          audioPath: "Zero OP Slow.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "slowed",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Zero Opening - Speed Up",
-          artist: "Tsuburaya",
-          cover: "Zero1.jpg",
-          audioPath: "Zero OP Speed.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "speedup",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Zero Ending",
-          artist: "Tsuburaya",
-          cover: "Zero3.jpg",
-          audioPath: "Zero ED.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Zero Ending - Speed Up",
-          artist: "Tsuburaya",
-          cover: "Zero5.jpg",
-          audioPath: "Zero ED Speed.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "speedup",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Ginga Opening",
-          artist: "Tsuburaya",
-          cover: ".jpg",
-          audioPath: "Ginga No Uta (Ultraman ginga Opening) Lyrics.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Ginga Opening 2",
-          artist: "Tsuburaya",
-          cover: ".jpg",
-          audioPath:
-            "Ultraman Ginga Op Song 2 [Legend of Galaxy - Takamiy ft Mamoru Miyano] Lirik Dan Terjemahan.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Ginga Ending",
-          artist: "Tsuburaya",
-          cover: ".jpg",
-          audioPath:
-            "Starlight_Ending Ultraman Ginga_Lirik Bahasa Indonesia.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Ginga S Opening",
-          artist: "Tsuburaya",
-          cover: ".jpg",
-          audioPath: "Eiyuu No Uta (Ultraman Ginga S Opening) Lyrics.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Ginga S Ending",
-          artist: "Tsuburaya",
-          cover: ".jpg",
-          audioPath:
-            "Kirameku Mirai - Yume no Ginga e (Ultraman Ginga S Ending) Lyrics.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman X Opening",
-          artist: "Tsuburaya",
-          cover: ".jpg",
-          audioPath: "Urutoraman X (Ultraman X Opening) Lyrics.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        {
-          title: "Ultraman Ginga Opening",
-          artist: "Tsuburaya",
-          cover: ".jpg",
+          cover: ".png",
           audioPath: ".mp3",
           videoBgSrc: ".mp4",
-          duration: "7:49",
+          duration: "3:28",
           type: "normal",
-          category: "tokusatsu",
+          category: "anime",
         },
         {
-          title: "Ultraman Ginga Opening",
-          artist: "Tsuburaya",
-          cover: ".jpg",
-          audioPath: ".mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "tokusatsu",
-        },
-        // TOKUSATSU - KAMENRIDER
-
-        // INTERNATIONAL
-        {
-          title: "Its Running Time",
-          artist: "Running Man",
-          cover: "RUNNING MAN.jpg",
-          audioPath: "running Man Animation Theme song [English Version].mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "international",
-        },
-        {
-          title: "The Winner Takes It All",
-          artist: "ABBA",
-          cover: "TWITA.png",
-          audioPath: "TWITA.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "international",
-        },
-        {
-          title: "Killer Queen",
-          artist: "Queen",
-          cover: "KILLER QUEEN.jpg",
-          audioPath: "Killer Queen Normal.mp3",
-          videoBgSrc: ".mp4",
-          duration: "4:25",
-          type: "normal",
-          category: "international",
-        },
-        {
-          title: "Killer Queen - Speed Up",
-          artist: "Queen",
-          cover: "KILLER QUEEN.jpg",
-          audioPath: "Killer Queen Speed Up.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:00",
-          type: "speedup",
-          category: "international",
-        },
-        {
-          title: "Killer Queen - Slowed",
-          artist: "Queen",
-          cover: "KILLER QUEEN.jpg",
-          audioPath: "Killer Queen Slowed.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:39",
-          type: "slowed",
-          category: "international",
-        },
-        {
-          title: "The Wonder Of You",
-          artist: "Elvis Presley",
-          cover: "THE WONDER OF YOU.jpg",
-          audioPath: "THE WONDER OF YOU NORMAL.mp3",
-          videoBgSrc: ".mp4",
-          duration: "2:29",
-          type: "normal",
-          category: "international",
-        },
-        {
-          title: "The Wonder Of You - Slowed Reverb",
-          artist: "Elvis Presley",
-          cover: "THE WONDER OF YOU.jpg",
-          audioPath: "THE WONDER OF YOU SLOWED REVERB.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:12",
-          type: "slowed",
-          category: "international",
-        },
-        {
-          title: "Act a Fool",
-          artist: "???",
-          cover: "Act a Fool.png",
-          audioPath: "Act a Fool.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "international",
-        },
-        {
-          title: "Batterfield",
-          artist: "Jordin Sparks",
-          cover: "Battlfield.png",
-          audioPath: "32 - Battlefield.mp3",
-          videoBgSrc: ".mp4",
-          duration: "7:49",
-          type: "normal",
-          category: "international",
-        },
-
-        // LOCAL
-        {
-          title: "Bunga Terakhir",
-          artist: "Bebi Romeo",
-          cover: "BUNGA (2).png",
-          audioPath: "original-sound-kieruahahah.mp3",
-          videoBgSrc: "again-lookbackedit-sad-bungaterakhir-kyomoto-fujino.mp4",
-          duration: "3:12",
-          type: "normal",
-          category: "local",
-        },
-        {
-          title: "Bunga Terakhir Ver.2",
-          artist: "Bebi Romeo",
-          cover: "BUNGA (1).png",
-          audioPath: "original-sound-ayzegio.mp3",
+          title: "One Punch Man - Opening 2",
+          artist: "-",
+          cover: ".png",
+          audioPath: "One Punch Man Opening 2 4K 60FPS Creditless.mp3",
           videoBgSrc:
-            "malas-post🥀-takopiinogenzai-x-bunga-terakhir-animeedit-lagugalau-sadanime-fypシ-amv.mp4",
-          duration: "3:12",
+            "aifaceswap-One Punch Man Opening 2 _ 4K _ 60FPS _ Creditless _.mp4",
+          duration: "3:28",
           type: "normal",
-          category: "local",
+          category: "anime",
         },
-        {
-          title: "Salahkah Kita - Speed Up",
-          artist: "Irwansyah",
-          cover: "MSM.png",
-          audioPath:
-            "ytmp3free.cc_salah-kah-kita-speed-up-14-youtubemp3free.org.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:12",
-          type: "slowed",
-          category: "local",
-        },
-        {
-          title: "Mencintaimu Sampai Mati - Speed Up",
-          artist: "Utopia",
-          cover: "MSM.png",
-          audioPath:
-            "ytmp3free.cc_mencintaimu-sampai-mati-utopia-speed-up-youtubemp3free.org.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:12",
-          type: "slowed",
-          category: "local",
-        },
-        {
-          title: "Tentang Perasaanku - Speed Up",
-          artist: "Irwansyah",
-          cover: "TP.png",
-          audioPath: "Tentang Perasaanku.mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:12",
-          type: "slowed",
-          category: "local",
-        },
-        {
-          title: "Pecinta Wanita - Speed Up",
-          artist: "Irwansyah",
-          cover: "PW.png",
-          audioPath: "pencinta wanita - Irwansyah (speed up).mp3",
-          videoBgSrc: ".mp4",
-          duration: "3:12",
-          type: "slowed",
-          category: "local",
-        },
-        // ... (data lagu lainnya)
+        // ... (data lagu lainnya sesuai kebutuhan)
       ];
 
       // Mengambil elemen DOM
@@ -2960,6 +1352,9 @@
       );
       const backgroundVideo = document.getElementById("backgroundVideo");
       const videoLoading = document.getElementById("video-loading");
+      const videoLoopIndicator = document.getElementById(
+        "video-loop-indicator"
+      );
 
       // Elemen audio
       const audio = new Audio();
@@ -2984,16 +1379,20 @@
       let currentCategory = "all";
       let currentSearchTerm = "";
       let filteredSongs = [...songs];
-      let isHoveringSongList = false;
-      let hoverTimeout;
       let videoSyncInterval;
-      let lastVideoSyncTime = 0;
+      let videoLoopInterval;
+      let isVideoLooping = false;
       let currentVideoSrc = "";
 
-      // PERBAIKAN UTAMA: Fungsi untuk memuat video background
+      // PERBAIKAN UTAMA: Fungsi untuk memuat video background dengan looping
       function loadBackgroundVideo(videoSrc) {
-        // Hentikan sinkronisasi sebelumnya
+        // Hentikan sinkronisasi dan looping sebelumnya
         clearInterval(videoSyncInterval);
+        clearInterval(videoLoopInterval);
+
+        // Reset status looping
+        isVideoLooping = false;
+        videoLoopIndicator.classList.remove("active");
 
         // Jika tidak ada video, sembunyikan container
         if (!videoSrc || videoSrc === ".mp4" || videoSrc === "") {
@@ -3008,17 +1407,21 @@
         backgroundVideo.classList.add("loading");
         backgroundVideo.classList.remove("loaded");
 
-        // Set source video
+        // Set source video dan atur untuk looping
         backgroundVideo.src = videoSrc;
+        backgroundVideo.loop = true; // ✅ SET LOOPING DI SINI
         currentVideoSrc = videoSrc;
 
         // Event listeners untuk video
         backgroundVideo.onloadeddata = function () {
-          console.log("Video loaded:", videoSrc);
+          console.log("Video loaded with looping:", videoSrc);
           backgroundVideo.classList.remove("loading");
           backgroundVideo.classList.add("loaded");
           videoLoading.classList.remove("active");
           backgroundVideoContainer.classList.add("active");
+
+          // Mulai looping video
+          startVideoLooping();
 
           // Sinkronkan dengan audio jika sedang diputar
           if (isPlaying) {
@@ -3041,23 +1444,74 @@
         };
       }
 
+      // PERBAIKAN: Fungsi untuk memulai looping video
+      function startVideoLooping() {
+        isVideoLooping = true;
+        videoLoopIndicator.classList.add("active");
+
+        // Hapus interval sebelumnya
+        clearInterval(videoLoopInterval);
+
+        // Cek setiap 500ms apakah video perlu di-loop
+        videoLoopInterval = setInterval(() => {
+          if (backgroundVideo.src && !backgroundVideo.paused) {
+            const currentTime = backgroundVideo.currentTime;
+            const duration = backgroundVideo.duration;
+
+            // Jika video hampir selesai (dalam 0.5 detik dari akhir)
+            if (duration - currentTime < 0.5) {
+              console.log("Video looping back to start");
+              backgroundVideo.currentTime = 0;
+            }
+
+            // Jika video error atau stalled, coba restart
+            if (backgroundVideo.ended && !backgroundVideo.paused) {
+              console.log("Video ended, restarting...");
+              backgroundVideo.currentTime = 0;
+              backgroundVideo.play().catch((e) => {
+                console.error("Error restarting video:", e);
+              });
+            }
+          }
+        }, 500);
+      }
+
       // PERBAIKAN UTAMA: Fungsi untuk sinkronisasi video dengan audio
       function syncVideoWithAudio() {
         if (!backgroundVideo.src || !isPlaying) return;
 
-        // Sinkronkan video dengan audio setiap 500ms
         const currentAudioTime = audio.currentTime;
         const currentVideoTime = backgroundVideo.currentTime;
+        const videoDuration = backgroundVideo.duration;
 
-        // Jika perbedaan waktu lebih dari 0.5 detik, sinkronkan
-        if (Math.abs(currentAudioTime - currentVideoTime) > 0.5) {
-          backgroundVideo.currentTime = currentAudioTime;
+        // Jika video duration valid, hitung posisi looping
+        if (videoDuration && !isNaN(videoDuration)) {
+          const expectedVideoTime = currentAudioTime % videoDuration;
+
+          // Jika perbedaan waktu lebih dari 1 detik, sinkronkan
+          if (Math.abs(currentVideoTime - expectedVideoTime) > 1.0) {
+            backgroundVideo.currentTime = expectedVideoTime;
+          }
+        } else {
+          // Fallback: sinkronisasi sederhana
+          if (Math.abs(currentAudioTime - currentVideoTime) > 0.5) {
+            backgroundVideo.currentTime = currentAudioTime;
+          }
         }
 
         // Cek apakah video masih berjalan, jika tidak, coba putar ulang
         if (backgroundVideo.paused && isPlaying) {
           backgroundVideo.play().catch((e) => {
             console.log("Video paused, attempting to restart:", e);
+          });
+        }
+
+        // Force restart video jika stalled
+        if (backgroundVideo.ended && isPlaying) {
+          console.log("Video ended, forcing restart");
+          backgroundVideo.currentTime = 0;
+          backgroundVideo.play().catch((e) => {
+            console.error("Error forcing video restart:", e);
           });
         }
       }
@@ -3152,28 +1606,15 @@
           song.videoBgSrc !== ".mp4" &&
           song.videoBgSrc !== ""
         ) {
-          // Jika video sudah dimuat, langsung sinkronkan
-          if (
-            backgroundVideo.src &&
-            backgroundVideo.src.includes(song.videoBgSrc)
-          ) {
-            backgroundVideo.currentTime = audio.currentTime;
-            backgroundVideoContainer.classList.add("active");
-
-            if (isPlaying) {
-              backgroundVideo.play().catch((e) => {
-                console.error("Error playing existing video:", e);
-              });
-            }
-          } else {
-            // Load video baru
-            loadBackgroundVideo(song.videoBgSrc);
-          }
+          loadBackgroundVideo(song.videoBgSrc);
         } else {
           // Sembunyikan video background
           backgroundVideoContainer.classList.remove("active");
           backgroundVideo.src = "";
           videoLoading.classList.remove("active");
+          videoLoopIndicator.classList.remove("active");
+          clearInterval(videoLoopInterval);
+          isVideoLooping = false;
         }
       }
 
@@ -3289,7 +1730,7 @@
         currentTimeEl.textContent = formatTime(currentTime);
       }
 
-      // Set progress bar ketika diklik - PERBAIKAN UTAMA
+      // Set progress bar ketika diklik
       function setProgress(e) {
         const width = this.clientWidth;
         const clickX = e.offsetX;
@@ -3300,7 +1741,7 @@
         const newTime = (clickX / width) * duration;
         audio.currentTime = newTime;
 
-        // PERBAIKAN: Video background juga ikut lompat ke waktu yang sama
+        // Video background juga ikut lompat ke waktu yang sama
         if (backgroundVideo.src && backgroundVideo.duration) {
           backgroundVideo.currentTime = newTime;
         }
@@ -3315,6 +1756,11 @@
         artistName.textContent = song.artist;
         albumCover.src = song.cover;
         audio.src = song.audioPath;
+
+        // Hentikan looping sebelumnya
+        clearInterval(videoLoopInterval);
+        isVideoLooping = false;
+        videoLoopIndicator.classList.remove("active");
 
         // Update background video
         updateBackgroundVideo(song);
@@ -3346,8 +1792,14 @@
 
         // Putar video background jika ada
         if (backgroundVideo.src) {
-          // PERBAIKAN: Pastikan video mulai dari waktu yang sama dengan audio
+          // Pastikan video mulai dari waktu yang sama dengan audio
           backgroundVideo.currentTime = audio.currentTime;
+
+          // Mulai looping jika belum
+          if (!isVideoLooping) {
+            startVideoLooping();
+          }
+
           backgroundVideo.play().catch((e) => {
             console.error("Error playing background video:", e);
           });
@@ -3385,8 +1837,11 @@
           backgroundVideo.pause();
         }
 
-        // Hentikan sinkronisasi
+        // Hentikan sinkronisasi dan looping
         clearInterval(videoSyncInterval);
+        clearInterval(videoLoopInterval);
+        isVideoLooping = false;
+        videoLoopIndicator.classList.remove("active");
 
         audio.pause();
       }
@@ -3467,7 +1922,7 @@
       function prevSong() {
         if (audio.currentTime > 3) {
           audio.currentTime = 0;
-          // PERBAIKAN: Video juga reset ke awal
+          // Video juga reset ke awal
           if (backgroundVideo.src) {
             backgroundVideo.currentTime = 0;
           }
@@ -3635,6 +2090,31 @@
         errorMessage.style.display = "none";
       }
 
+      // Event listeners untuk video ended (fallback)
+      backgroundVideo.addEventListener("ended", function () {
+        if (isPlaying) {
+          console.log("Video ended event triggered, restarting...");
+          this.currentTime = 0;
+          this.play().catch((e) => {
+            console.error("Error on video ended:", e);
+          });
+        }
+      });
+
+      // Event listener untuk video error
+      backgroundVideo.addEventListener("error", function () {
+        console.error("Video error occurred, attempting recovery...");
+        // Coba reload video setelah 2 detik
+        setTimeout(() => {
+          if (backgroundVideo.src && isPlaying) {
+            backgroundVideo.load();
+            backgroundVideo.play().catch((e) => {
+              console.error("Video recovery failed:", e);
+            });
+          }
+        }, 2000);
+      });
+
       // Event listeners
       playBtn.addEventListener("click", () => {
         if (isPlaying) {
@@ -3655,7 +2135,7 @@
           nextSong();
         } else {
           audio.currentTime = 0;
-          // PERBAIKAN: Video juga reset ke awal
+          // Video juga reset ke awal
           if (backgroundVideo.src) {
             backgroundVideo.currentTime = 0;
           }
@@ -3666,7 +2146,7 @@
       // Update progress bar
       audio.addEventListener("timeupdate", updateProgress);
 
-      // Klik pada progress bar - PERBAIKAN UTAMA
+      // Klik pada progress bar
       progressContainer.addEventListener("click", setProgress);
 
       // Ketika metadata audio dimuat (untuk mendapatkan durasi)
@@ -3726,14 +2206,14 @@
             break;
           case "ArrowRight":
             audio.currentTime += 5;
-            // PERBAIKAN: Video juga maju 5 detik
+            // Video juga maju 5 detik
             if (backgroundVideo.src) {
               backgroundVideo.currentTime += 5;
             }
             break;
           case "ArrowLeft":
             audio.currentTime -= 5;
-            // PERBAIKAN: Video juga mundur 5 detik
+            // Video juga mundur 5 detik
             if (backgroundVideo.src) {
               backgroundVideo.currentTime -= 5;
             }
