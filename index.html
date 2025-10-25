@@ -1135,7 +1135,7 @@
       <div class="video-loop-indicator" id="video-loop-indicator">
         <i class="fas fa-redo"></i> Looping
       </div>
-      <video id="backgroundVideo" autoplay muted playsinline></video>
+      <video id="backgroundVideo" muted playsinline></video>
       <div class="video-overlay"></div>
     </div>
 
@@ -1729,7 +1729,7 @@
         }
       }
 
-      // Muat lagu
+      // PERBAIKAN UTAMA: Muat lagu tanpa memutar video
       function loadSong(song) {
         showLoadingState(true);
         hideError();
@@ -1744,8 +1744,15 @@
         isVideoLooping = false;
         videoLoopIndicator.classList.remove("active");
 
-        // Update background video
-        updateBackgroundVideo(song);
+        // PERBAIKAN: Hanya update UI, jangan langsung load video
+        // Video akan diload saat playSong() dipanggil
+        if (isPlaying) {
+          updateBackgroundVideo(song);
+        } else {
+          // Jika tidak sedang playing, sembunyikan video
+          backgroundVideoContainer.classList.remove("active");
+          backgroundVideo.src = "";
+        }
 
         // Set durasi default dari metadata lagu
         durationEl.textContent = song.duration;
@@ -1771,6 +1778,16 @@
 
         // Start visualization
         updateVisualization();
+
+        // PERBAIKAN: Pastikan video background dimuat dan diputar
+        const currentSong = songs[currentSongIndex];
+        if (
+          currentSong.videoBgSrc &&
+          currentSong.videoBgSrc !== ".mp4" &&
+          currentSong.videoBgSrc !== ""
+        ) {
+          updateBackgroundVideo(currentSong);
+        }
 
         // Putar video background jika ada
         if (backgroundVideo.src) {
@@ -2214,10 +2231,30 @@
         }
       });
 
-      // Inisialisasi
-      populateSongList();
-      loadSong(songs[currentSongIndex]);
-      audio.volume = volumeSlider.value;
+      // PERBAIKAN UTAMA: Inisialisasi tanpa memuat video
+      function initializeApp() {
+        populateSongList();
+
+        // Hanya setup UI tanpa memuat media
+        songTitle.textContent = "Pilih Lagu";
+        artistName.textContent = "-";
+        albumCover.src = "https://via.placeholder.com/400x400?text=Album+Cover";
+
+        // Pastikan video dalam keadaan pause dan tidak ada source
+        backgroundVideo.pause();
+        backgroundVideo.src = "";
+        backgroundVideoContainer.classList.remove("active");
+
+        // Setup volume
+        audio.volume = volumeSlider.value;
+
+        // Reset status
+        isPlaying = false;
+        currentSongIndex = 0;
+      }
+
+      // Jalankan inisialisasi
+      initializeApp();
     </script>
   </body>
 </html>
